@@ -55,7 +55,7 @@ class BreedPredictor:
         # 1. Load class mapping
         mapping_file = Path(class_mapping_path) if class_mapping_path else self.paths.artifacts_class_mapping / "class_indices.json"
         if mapping_file.exists():
-            with open(mapping_file, "r", encoding="utf-8") as f:
+            with open(mapping_file, encoding="utf-8") as f:
                 self.class_indices = json.load(f)
             # Invert mapping: integer index -> breed name
             self.index_to_breed = {v: k for k, v in self.class_indices.items()}
@@ -103,14 +103,12 @@ class BreedPredictor:
             with open(image_input, "rb") as f:
                 img_bytes = f.read()
             valid, err, pil_img = ImageValidator.validate_bytes(img_bytes)
-            orig_path = str(image_input)
+            str(image_input)
         elif isinstance(image_input, bytes):
             valid, err, pil_img = ImageValidator.validate_bytes(image_input)
-            orig_path = None
         elif isinstance(image_input, Image.Image):
             pil_img = image_input.convert("RGB")
             valid, err = True, None
-            orig_path = None
         else:
             return {"status": "error", "message": f"Unsupported input type: {type(image_input)}"}
 

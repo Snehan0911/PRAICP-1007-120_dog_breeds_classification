@@ -2,7 +2,6 @@
 Tests — Prediction Engine, Image Validation, and Confidence Interpretation.
 """
 
-from PIL import Image
 
 from src.inference.confidence import ConfidenceInterpreter
 from src.inference.image_validator import ImageValidator

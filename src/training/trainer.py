@@ -148,7 +148,7 @@ class ModelTrainer:
                     )
 
                     total_epochs = epochs_phase1 + epochs_phase2
-                    history2 = model.fit(
+                    model.fit(
                         train_ds,
                         validation_data=val_ds,
                         epochs=total_epochs,
