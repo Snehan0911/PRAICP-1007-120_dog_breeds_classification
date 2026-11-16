@@ -6,19 +6,9 @@ Architectural Rationale:
     separable convolutions, drastically reducing FLOPs (300M vs 4B+ in ResNet) and
     parameter footprint (3.4M params).
 
-    On CPU-bound environments or edge deployments, MobileNetV2 yields state-of-the-art
-    latency/accuracy trade-offs.
-
-Transfer Learning Strategy:
-    Phase 1 (Feature Extraction):
-      - Backbone is completely frozen (trainable = False).
-      - Pre-trained ImageNet weights are leveraged as a universal feature extractor.
-      - Only the newly attached classification head is trained.
-
-    Phase 2 (Fine-Tuning):
-      - Top N layers of the backbone are unfrozen.
-      - Training resumes with a significantly reduced learning rate (1e-5 to 1e-4)
-        to prevent catastrophic forgetting of pre-trained weights.
+    Uses a flat functional graph connecting input_tensor directly to base_model,
+    allowing full layer access for Grad-CAM explainability and surgical layer-by-layer
+    fine-tuning.
 """
 
 import tensorflow as tf
@@ -47,9 +37,9 @@ def build_mobilenet_v2(
     """
     inputs = layers.Input(shape=input_shape, name="input_image")
 
-    # Base pretrained model without top classification layer
+    # Base pretrained model without top classification layer connected directly to inputs
     base_model = tf.keras.applications.MobileNetV2(
-        input_shape=input_shape,
+        input_tensor=inputs,
         include_top=False,
         weights="imagenet",
     )
@@ -58,12 +48,11 @@ def build_mobilenet_v2(
         base_model.trainable = False
     elif fine_tune_at is not None:
         base_model.trainable = True
-        # Freeze all layers before fine_tune_at
         for layer in base_model.layers[:fine_tune_at]:
             layer.trainable = False
 
-    # Feature extraction forward pass (training=False ensures BatchNorm stays in inference mode)
-    x = base_model(inputs, training=False)
+    # Feature extraction forward pass
+    x = base_model.output
 
     # Classification Head
     x = layers.GlobalAveragePooling2D(name="head_gap")(x)

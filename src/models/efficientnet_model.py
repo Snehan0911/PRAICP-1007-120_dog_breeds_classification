@@ -37,7 +37,7 @@ def build_efficientnet_b0(
     inputs = layers.Input(shape=input_shape, name="input_image")
 
     base_model = tf.keras.applications.EfficientNetB0(
-        input_shape=input_shape,
+        input_tensor=inputs,
         include_top=False,
         weights="imagenet",
     )
@@ -49,7 +49,7 @@ def build_efficientnet_b0(
         for layer in base_model.layers[:fine_tune_at]:
             layer.trainable = False
 
-    x = base_model(inputs, training=False)
+    x = base_model.output
 
     x = layers.GlobalAveragePooling2D(name="head_gap")(x)
     x = layers.BatchNormalization(name="head_bn1")(x)
