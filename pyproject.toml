@@ -1,0 +1,57 @@
+[project]
+name = "caninevision-ai"
+version = "1.0.0"
+description = "CanineVision AI – Intelligent Dog Breed Recognition System. 120-class CNN-based image classification using TensorFlow/Keras."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[project.urls]
+Repository = "https://github.com/your-username/caninevision-ai"
+
+# =============================================================================
+# Ruff — Linting and Formatting
+# =============================================================================
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes (unused imports, undefined names)
+    "I",    # isort (import order)
+    "B",    # flake8-bugbear (common bugs)
+    "C4",   # flake8-comprehensions (unnecessary comprehensions)
+    "UP",   # pyupgrade (modernise Python syntax)
+    "N",    # pep8-naming
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "E501",   # Line length is handled by formatter, not linter
+    "B008",   # Do not perform function calls in default arguments (FastAPI needs this)
+    "N806",   # Variable in function should be lowercase (conflicts with TF conventions like X_train)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "api", "app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+# =============================================================================
+# Pytest
+# =============================================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

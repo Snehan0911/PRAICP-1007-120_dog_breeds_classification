@@ -1,0 +1,79 @@
+# =============================================================================
+# CanineVision AI — .gitignore
+# =============================================================================
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Dataset (never commit raw images to Git)
+dog-breed-120/
+data/raw/
+*.zip
+
+# Trained models (too large for Git — use Git LFS or model registry)
+artifacts/models/*.keras
+artifacts/models/*.h5
+artifacts/models/*.pb
+
+# MLflow runs (local tracking data)
+mlruns/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Output files
+outputs/
+
+# Secrets
+.env
+*.env
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Windows
+Thumbs.db
+desktop.ini
+*.lnk
+
+# macOS
+.DS_Store
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Ruff cache
+.ruff_cache/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Docker volumes
+.docker_data/

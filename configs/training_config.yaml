@@ -1,0 +1,82 @@
+# =============================================================================
+# CanineVision AI — Training Configuration
+# =============================================================================
+
+training:
+
+  # --- Common settings across all models ---
+  common:
+    batch_size: 32          # Keep low for CPU + limited RAM
+    optimizer: "adam"
+    loss: "sparse_categorical_crossentropy"
+    metrics:
+      - "accuracy"
+
+  # --- Custom CNN training ---
+  custom_cnn:
+    epochs: 30
+    learning_rate: 0.001
+    min_learning_rate: 0.00001
+    early_stopping_patience: 7
+    lr_reduction_patience: 4
+    lr_reduction_factor: 0.5
+
+  # --- MobileNetV2: Phase 1 (head training with frozen backbone) ---
+  mobilenet_v2_phase1:
+    epochs: 20
+    learning_rate: 0.001
+    min_learning_rate: 0.00001
+    early_stopping_patience: 5
+    lr_reduction_patience: 3
+    lr_reduction_factor: 0.5
+
+  # --- MobileNetV2: Phase 2 (fine-tuning unfrozen layers) ---
+  mobilenet_v2_phase2:
+    epochs: 15
+    learning_rate: 0.0001       # 10x lower for fine-tuning
+    min_learning_rate: 0.000001
+    early_stopping_patience: 7
+    lr_reduction_patience: 3
+    lr_reduction_factor: 0.3
+
+  # --- EfficientNetB0: Phase 1 ---
+  efficientnet_b0_phase1:
+    epochs: 20
+    learning_rate: 0.001
+    min_learning_rate: 0.00001
+    early_stopping_patience: 5
+    lr_reduction_patience: 3
+    lr_reduction_factor: 0.5
+
+  # --- EfficientNetB0: Phase 2 ---
+  efficientnet_b0_phase2:
+    epochs: 15
+    learning_rate: 0.0001
+    min_learning_rate: 0.000001
+    early_stopping_patience: 7
+    lr_reduction_patience: 3
+    lr_reduction_factor: 0.3
+
+# --- Augmentation (applied only to training data) ---
+augmentation:
+  horizontal_flip: true
+  rotation_range: 0.15        # ±15 degrees (realistic for dog photos)
+  zoom_range: 0.15
+  width_shift_range: 0.10
+  height_shift_range: 0.10
+  brightness_range: 0.15
+
+# --- Confidence interpretation thresholds ---
+# These will be refined using validation set calibration post-training
+confidence:
+  high_threshold: 0.70
+  medium_threshold: 0.40
+  low_threshold: 0.0
+  unknown_threshold: 0.20     # Warn user if top-1 probability < this
+
+# --- MLflow ---
+mlflow:
+  experiment_name: "CanineVision-Dog-Breed-Classification"
+  run_tags:
+    project: "PRAICP-1007-120"
+    framework: "tensorflow"
