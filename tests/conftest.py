@@ -63,7 +63,7 @@ def small_dataset_df(project_paths):
     classes = df["label"].unique()[:10]
     return (
         df[df["label"].isin(classes)]
-        .groupby("label", group_keys=False)
-        .apply(lambda x: x.head(5))
+        .groupby("label")
+        .head(5)
         .reset_index(drop=True)
     )
