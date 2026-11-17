@@ -11,6 +11,7 @@ from __future__ import annotations
 import base64
 import io
 import logging
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -163,19 +164,24 @@ class GradCAMExplainer:
 
     def explain_image(
         self,
-        image_source: str | Path | bytes | io.BytesIO,
+        image_source: str | Path | bytes | io.BytesIO | np.ndarray,
         class_idx: int | None = None,
         alpha: float = 0.45,
+        preprocess_fn: Callable[[np.ndarray], np.ndarray] | None = None,
     ) -> dict[str, Any]:
         """
         Full end-to-end explainability pipeline: loads image, runs inference,
         computes Grad-CAM heatmap, overlays visualization, and converts to Base64 PNG.
         """
         # 1. Load original image as uint8 (224, 224, 3)
-        raw_img = load_and_validate_image(image_source, target_size=(224, 224))
+        if isinstance(image_source, np.ndarray):
+            raw_img = image_source
+        else:
+            raw_img = load_and_validate_image(image_source, target_size=(224, 224))
 
-        # 2. Preprocess for MobileNetV2 [-1.0, 1.0]
-        input_tensor = preprocess_mobilenet_v2(raw_img)
+        # 2. Preprocess for network input
+        norm_fn = preprocess_fn or preprocess_mobilenet_v2
+        input_tensor = norm_fn(raw_img)
         input_batch = tf.expand_dims(input_tensor, axis=0)
 
         # 3. Model forward pass
