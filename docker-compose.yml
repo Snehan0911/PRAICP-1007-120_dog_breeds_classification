@@ -1,0 +1,43 @@
+# =============================================================================
+# Dog Breeds Classification – Docker Compose Deployment
+# Project Name: Dog Breeds Classification
+# Project ID: PRAICP-1007-120
+# =============================================================================
+
+version: "3.8"
+
+services:
+  dog-breeds-classifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dog-breeds-classification-app
+    image: dog-breeds-classification:1.0.0
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - PYTHONUNBUFFERED=1
+      - TF_ENABLE_ONEDNN_OPTS=1
+    volumes:
+      # Persist user uploads across container updates
+      - uploaded_photos:/app/dog_photos/uploaded
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 2048M
+        reservations:
+          cpus: "1.0"
+          memory: 512M
+
+volumes:
+  uploaded_photos:
+    name: dog_breeds_uploaded_photos
