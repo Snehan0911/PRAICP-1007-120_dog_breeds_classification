@@ -1,4 +1,4 @@
-# Python
+# Python Bytecode & Cache
 __pycache__/
 *.py[cod]
 *$py.class
@@ -30,35 +30,45 @@ ENV/
 env.bak/
 venv.bak/
 
-# Testing & Linting
+# Testing & Linting Cache
 .pytest_cache/
 .ruff_cache/
 .coverage
 htmlcov/
 
-# Logs & ML Experiments
-log/
-logs/
+# Logs & ML Telemetry
+log/training/*
+!log/training/.gitkeep
+log/application/*
+!log/application/.gitkeep
+log/tensorboard/*
+!log/tensorboard/.gitkeep
 mlruns/
 *.log
 
-# Checkpoints & Models
-model/checkpoints/
-model/saved_models/*.h5
-model/saved_models/*.keras
+# Checkpoints & Model Binaries
+model/checkpoints/*
+!model/checkpoints/.gitkeep
+model/saved_models/*
+!model/saved_models/.gitkeep
 *.h5
 *.keras
 
-# Uploaded Files
+# Uploaded Images
 dog_photos/uploaded/*
 !dog_photos/uploaded/.gitkeep
 
-# Datasets
+# Datasets & Large Archives
 dog-breed-120/
 dog-breed-120.zip
 *.zip
+*.tar
+*.tar.gz
 
-# OS Files
+# Environment Secrets
+.env
+
+# OS Metadata
 .DS_Store
 Thumbs.db
 desktop.ini
