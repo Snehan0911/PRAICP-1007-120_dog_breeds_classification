@@ -1,5 +1,6 @@
 # =============================================================================
-# CanineVision AI — .gitignore
+# Dog Breeds Classification — .gitignore
+# Project ID: PRAICP-1007-120
 # =============================================================================
 
 # Virtual environment
@@ -13,17 +14,41 @@ __pycache__/
 *$py.class
 *.pyo
 
+# Temporary IDE / Code Runner files (Unwanted artifacts)
+tempCodeRunnerFile.py
+*.tempCodeRunnerFile.py
+.vscode/
+.idea/
+*.code-workspace
+
+# Large model archives & raw tarballs
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
 # Dataset (never commit raw images to Git)
 dog-breed-120/
 data/raw/
-*.zip
+train/
+test/
 
-# Trained models (too large for Git — use Git LFS or model registry)
+# Uploaded user images (keep folder via .gitkeep)
+dog_photos/uploaded/*
+!dog_photos/uploaded/.gitkeep
+
+# Trained models & heavy checkpoints (too large for Git)
+model/checkpoints/*.keras
+model/checkpoints/*.h5
+model/saved_models/*.keras
 artifacts/models/*.keras
 artifacts/models/*.h5
 artifacts/models/*.pb
 
-# MLflow runs (local tracking data)
+# Training logs & telemetry
+log/tensorboard/
+log/training/*.log
+log/application/*.log
 mlruns/
 
 # Jupyter checkpoints
@@ -33,21 +58,16 @@ mlruns/
 # Output files
 outputs/
 
-# Secrets
+# Secrets & environment
 .env
 *.env
 
-# IDE
-.idea/
-.vscode/
-*.code-workspace
-
-# Windows
+# Windows system files
 Thumbs.db
 desktop.ini
 *.lnk
 
-# macOS
+# macOS system files
 .DS_Store
 
 # Distribution / packaging
@@ -56,24 +76,9 @@ build/
 *.egg-info/
 .eggs/
 
-# Testing
+# Testing & quality caches
 .pytest_cache/
 .coverage
 htmlcov/
 coverage.xml
-
-# Ruff cache
 .ruff_cache/
-
-# Logs
-logs/
-*.log
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.bak
-
-# Docker volumes
-.docker_data/

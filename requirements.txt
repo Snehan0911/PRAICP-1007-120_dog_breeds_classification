@@ -1,5 +1,5 @@
 # =============================================================================
-# CanineVision AI — Production Requirements
+# Dog Breeds Classification — Production Requirements
 # Project ID: PRAICP-1007-120
 # =============================================================================
 
@@ -15,21 +15,23 @@ scipy>=1.15.0
 pillow>=11.0.0
 opencv-python>=4.10.0
 
-# Machine Learning & Metrics
+# Machine Learning & Evaluation Metrics
 scikit-learn>=1.6.0
 
-# Visualisation & Dashboards
-matplotlib>=3.9.0
-seaborn>=0.13.0
-plotly>=6.0.0
-streamlit>=1.40.0
-
-# API Backend & Web Server
+# Web Applications & API Serving
+flask>=3.0.0
 fastapi>=0.115.0
 uvicorn>=0.32.0
 python-multipart>=0.0.18
 pydantic>=2.10.0
 httpx>=0.28.0
+streamlit>=1.40.0
+
+# Visualization & Telemetry
+tensorboard>=2.18.0
+matplotlib>=3.9.0
+seaborn>=0.13.0
+plotly>=6.0.0
 
 # MLOps & Experiment Tracking
 mlflow>=3.0.0
@@ -39,6 +41,6 @@ pyyaml>=6.0.2
 tqdm>=4.67.0
 python-dotenv>=1.0.1
 
-# Development, Testing & Code Quality
+# Automated Testing & Code Quality
 pytest>=8.3.0
 ruff>=0.8.0
