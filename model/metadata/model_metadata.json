@@ -1,0 +1,21 @@
+{
+  "project_name": "Dog Breeds Classification",
+  "project_id": "PRAICP-1007-120",
+  "model_backbone": "MobileNetV2",
+  "input_resolution": [
+    224,
+    224,
+    3
+  ],
+  "num_classes": 120,
+  "total_dataset_images": 20580,
+  "splits": {
+    "train": 14406,
+    "val": 3087,
+    "test": 3087
+  },
+  "test_top1_accuracy": 1.2,
+  "test_top3_accuracy": 3.6,
+  "model_file": "model/saved_models/best_model.keras",
+  "class_mapping_file": "model/class_mapping/class_indices.json"
+}
