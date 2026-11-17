@@ -1,84 +1,69 @@
-# =============================================================================
-# Dog Breeds Classification — .gitignore
-# Project ID: PRAICP-1007-120
-# =============================================================================
-
-# Virtual environment
-.venv/
-venv/
-env/
-
-# Python cache
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.pyo
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Temporary IDE / Code Runner files (Unwanted artifacts)
-tempCodeRunnerFile.py
-*.tempCodeRunnerFile.py
-.vscode/
-.idea/
-*.code-workspace
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-# Large model archives & raw tarballs
-*.tar
-*.tar.gz
-*.tgz
-*.zip
+# Testing & Linting
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Dataset (never commit raw images to Git)
-dog-breed-120/
-data/raw/
-train/
-test/
+# Logs & ML Experiments
+log/
+logs/
+mlruns/
+*.log
 
-# Uploaded user images (keep folder via .gitkeep)
+# Checkpoints & Models
+model/checkpoints/
+model/saved_models/*.h5
+model/saved_models/*.keras
+*.h5
+*.keras
+
+# Uploaded Files
 dog_photos/uploaded/*
 !dog_photos/uploaded/.gitkeep
 
-# Trained models & heavy checkpoints (too large for Git)
-model/checkpoints/*.keras
-model/checkpoints/*.h5
-model/saved_models/*.keras
-artifacts/models/*.keras
-artifacts/models/*.h5
-artifacts/models/*.pb
+# Datasets
+dog-breed-120/
+dog-breed-120.zip
+*.zip
 
-# Training logs & telemetry
-log/tensorboard/
-log/training/*.log
-log/application/*.log
-mlruns/
-
-# Jupyter checkpoints
-.ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# Output files
-outputs/
-
-# Secrets & environment
-.env
-*.env
-
-# Windows system files
+# OS Files
+.DS_Store
 Thumbs.db
 desktop.ini
-*.lnk
 
-# macOS system files
-.DS_Store
-
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
-.eggs/
-
-# Testing & quality caches
-.pytest_cache/
-.coverage
-htmlcov/
-coverage.xml
-.ruff_cache/
+# IDE Artifacts
+.idea/
+.vscode/
+tempCodeRunnerFile.py
