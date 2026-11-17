@@ -35,7 +35,9 @@ def run_pipeline(force_rescan: bool = False) -> None:
     validator = DatasetValidator()
 
     if not labels_path.exists() or force_rescan:
-        print("\n[Step 1/2] Scanning dataset directories and verifying image integrity...")
+        print(
+            "\n[Step 1/2] Scanning dataset directories and verifying image integrity..."
+        )
         validator.scan_and_validate()
     else:
         print(f"\n[Step 1/2] Found existing {labels_path}. Loading metadata...")
@@ -48,7 +50,7 @@ def run_pipeline(force_rescan: bool = False) -> None:
 
     print("\n[Step 2/2] Running deep statistical & pixel intensity profiling...")
     analyzer = DataAnalyzer()
-    top_bottom = analyzer.analyze_top_and_bottom_breeds(n=10)
+    _ = analyzer.analyze_top_and_bottom_breeds(n=10)
     pixel_stats = analyzer.analyze_pixel_intensities(sample_size=500)
 
     print("\n" + "=" * 70)
@@ -56,13 +58,23 @@ def run_pipeline(force_rescan: bool = False) -> None:
     print(f"  • Total Valid Images:     {summary['total_images']:,}")
     print(f"  • Total Breed Categories: {summary['total_classes']}")
     print(f"  • Corrupted Files:        {summary['corrupted_images_count']}")
-    print(f"  • Images Per Breed:       Min={summary['min_images_per_class']}, Max={summary['max_images_per_class']}, Mean={summary['mean_images_per_class']}")
+    print(
+        f"  • Images Per Breed:       Min={summary['min_images_per_class']}, Max={summary['max_images_per_class']}, Mean={summary['mean_images_per_class']}"
+    )
     print(f"  • Class Imbalance Ratio:  {summary['imbalance_ratio']}x (Well Balanced)")
-    print(f"  • Mean Resolution:        {summary['mean_width']} x {summary['mean_height']} px (Aspect Ratio: {summary['mean_aspect_ratio']})")
+    print(
+        f"  • Mean Resolution:        {summary['mean_width']} x {summary['mean_height']} px (Aspect Ratio: {summary['mean_aspect_ratio']})"
+    )
     print("\nPIXEL INTENSITY CHARACTERISTICS (RGB 0-255):")
-    print(f"  • Red Channel:   Mean={pixel_stats['red_channel']['mean']}, Std={pixel_stats['red_channel']['std']}")
-    print(f"  • Green Channel: Mean={pixel_stats['green_channel']['mean']}, Std={pixel_stats['green_channel']['std']}")
-    print(f"  • Blue Channel:  Mean={pixel_stats['blue_channel']['mean']}, Std={pixel_stats['blue_channel']['std']}")
+    print(
+        f"  • Red Channel:   Mean={pixel_stats['red_channel']['mean']}, Std={pixel_stats['red_channel']['std']}"
+    )
+    print(
+        f"  • Green Channel: Mean={pixel_stats['green_channel']['mean']}, Std={pixel_stats['green_channel']['std']}"
+    )
+    print(
+        f"  • Blue Channel:  Mean={pixel_stats['blue_channel']['mean']}, Std={pixel_stats['blue_channel']['std']}"
+    )
     print("\nGENERATED EDA CHARTS (outputs/eda/):")
     print("  1. outputs/eda/class_distribution.png")
     print("  2. outputs/eda/image_resolutions.png")
@@ -75,6 +87,10 @@ def run_pipeline(force_rescan: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run dataset exploration and EDA.")
-    parser.add_argument("--rescan", action="store_true", help="Force re-scan of raw images even if labels.csv exists.")
+    parser.add_argument(
+        "--rescan",
+        action="store_true",
+        help="Force re-scan of raw images even if labels.csv exists.",
+    )
     args = parser.parse_args()
     run_pipeline(force_rescan=args.rescan)
