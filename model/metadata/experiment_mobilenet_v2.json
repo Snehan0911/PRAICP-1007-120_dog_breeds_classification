@@ -1,0 +1,60 @@
+{
+  "project_name": "Dog Breeds Classification",
+  "project_id": "PRAICP-1007-120",
+  "model_name": "mobilenet_v2",
+  "timestamp": "2026-11-17T05:26:45.226776+00:00",
+  "duration_seconds": 50.5,
+  "configuration": {
+    "model_name": "mobilenet_v2",
+    "num_classes": 120,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "epochs": 3,
+    "seed": 42,
+    "total_params": 2621880,
+    "trainable_params": 361336
+  },
+  "epochs_completed": 3,
+  "final_train_loss": 4.642,
+  "final_val_loss": 3.5643,
+  "final_train_accuracy": 0.085,
+  "final_val_accuracy": 0.2812,
+  "best_val_accuracy": 0.2812,
+  "history": {
+    "accuracy": [
+      0.02,
+      0.05375,
+      0.085
+    ],
+    "loss": [
+      5.72253,
+      5.16242,
+      4.64204
+    ],
+    "top_3_accuracy": [
+      0.055,
+      0.12625,
+      0.1775
+    ],
+    "val_accuracy": [
+      0.1,
+      0.22813,
+      0.28125
+    ],
+    "val_loss": [
+      4.43826,
+      3.95499,
+      3.56432
+    ],
+    "val_top_3_accuracy": [
+      0.18438,
+      0.40938,
+      0.55
+    ],
+    "learning_rate": [
+      0.001,
+      0.001,
+      0.001
+    ]
+  }
+}
