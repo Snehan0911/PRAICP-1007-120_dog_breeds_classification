@@ -1,0 +1,45 @@
+{
+  "project": "Dog Breeds Classification",
+  "project_id": "PRAICP-1007-120",
+  "timestamp": "2026-11-17T06:10:10Z",
+  "system": {
+    "python_version": "3.13.3",
+    "cpu_cores_logical": 12,
+    "cpu_cores_physical": 10,
+    "total_system_ram_gb": 7.68
+  },
+  "model_loading": {
+    "cold_start_latency_sec": 1.115,
+    "initial_process_ram_mb": 381.54,
+    "post_load_process_ram_mb": 436.79,
+    "model_ram_footprint_mb": 55.25
+  },
+  "inference_pure": {
+    "num_runs": 20,
+    "mean_ms": 87.84,
+    "median_ms": 87.25,
+    "p95_ms": 93.81,
+    "min_ms": 82.34,
+    "max_ms": 95.88,
+    "std_dev_ms": 3.69,
+    "throughput_fps": 11.38
+  },
+  "inference_with_gradcam": {
+    "num_runs": 20,
+    "mean_ms": 653.87,
+    "median_ms": 652.96,
+    "p95_ms": 864.33,
+    "min_ms": 451.58,
+    "max_ms": 1106.09,
+    "std_dev_ms": 135.71,
+    "gradcam_overhead_ms": 566.03
+  },
+  "reliability_checks": {
+    "missing_file_handled": true,
+    "empty_file_handled": true,
+    "corrupt_bytes_handled": true,
+    "unsupported_extension_handled": true,
+    "high_resolution_resizing_handled": true
+  },
+  "all_edge_cases_passed": true
+}
