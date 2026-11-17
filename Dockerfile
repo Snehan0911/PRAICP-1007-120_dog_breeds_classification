@@ -45,12 +45,12 @@ COPY --chown=appuser:appuser docs/ ./docs/
 # Switch to non-root user
 USER appuser
 
-# Expose web service port
-EXPOSE 5000
+# Expose web service ports (7860 for Hugging Face Spaces, 5000 for standard Docker)
+EXPOSE 7860 5000
 
 # Container healthcheck targeting /health endpoint
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:5000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-7860}/health || curl -f http://localhost:5000/health || exit 1
 
-# Production WSGI server command
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--threads", "2", "--timeout", "120", "app:app"]
+# Production WSGI server command using dynamic port binding
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-7860} --workers 1 --threads 4 --timeout 120 app:app"]
