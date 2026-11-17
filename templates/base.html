@@ -64,6 +64,9 @@
           <a href="{{ url_for('index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint == 'index' or request.endpoint == 'predict' %}bg-sky-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %}">
             <i class="fa-solid fa-camera mr-1.5"></i> Classifier
           </a>
+          <a href="{{ url_for('live') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint == 'live' %}bg-sky-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %}">
+            <i class="fa-solid fa-video mr-1.5 text-emerald-400"></i> Live Camera
+          </a>
           <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint == 'dashboard' %}bg-sky-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %}">
             <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
           </a>

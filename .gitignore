@@ -45,6 +45,7 @@ log/tensorboard/*
 !log/tensorboard/.gitkeep
 mlruns/
 *.log
+*.exe
 
 # Checkpoints & Model Binaries
 model/checkpoints/*

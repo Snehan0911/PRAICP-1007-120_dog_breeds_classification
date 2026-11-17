@@ -1,0 +1,767 @@
+{% extends "base.html" %}
+
+{% block title %}Live Camera & Video Detection – Dog Breeds Classification{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-slate-200">
+    <div>
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold uppercase tracking-wider mb-2">
+        <i class="fa-solid fa-video text-emerald-600 animate-pulse"></i>
+        <span>Live Computer Vision &bull; Real-Time Streaming</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        Live Camera &amp; Video Dog Breed Detection
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-1">
+        Point your webcam or phone camera at a dog to detect its breed in real-time (<span class="font-semibold text-emerald-600">~85ms latency</span>) or snap high-res photos with Grad-CAM explainability.
+      </p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <a href="{{ url_for('index') }}" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm flex items-center space-x-2">
+        <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i>
+        <span>File Upload Mode</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mode Switcher Tabs -->
+  <div class="flex space-x-2 border-b border-slate-200 pb-2">
+    <button id="tabWebcamBtn" class="px-4 py-2 rounded-xl text-sm font-bold bg-sky-600 text-white flex items-center space-x-2 transition-all shadow-sm">
+      <i class="fa-solid fa-camera"></i>
+      <span>Webcam / Live Camera</span>
+    </button>
+    <button id="tabVideoFileBtn" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center space-x-2 transition-all">
+      <i class="fa-solid fa-film"></i>
+      <span>Video File Stream</span>
+    </button>
+  </div>
+
+  <!-- Main Live Detection Workspace Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- Left Column: Video Viewport & Camera Controls (7 cols) -->
+    <div class="lg:col-span-7 space-y-4">
+
+      <!-- Viewport Card -->
+      <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 relative">
+
+        <!-- Live Video Element Container -->
+        <div class="relative aspect-video w-full bg-slate-950 flex items-center justify-center overflow-hidden" id="videoContainer">
+          
+          <!-- Webcam Video Stream -->
+          <video id="webcamVideo" autoplay playsinline muted class="w-full h-full object-cover transition-transform"></video>
+
+          <!-- Local Video File Element (Hidden by default) -->
+          <video id="localVideo" playsinline loop class="w-full h-full object-contain hidden"></video>
+
+          <!-- Off-screen Processing Canvas -->
+          <canvas id="captureCanvas" class="hidden"></canvas>
+
+          <!-- Camera Placeholder / Off State -->
+          <div id="cameraOffPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/95 z-10 space-y-4">
+            <div class="w-20 h-20 rounded-2xl bg-slate-800 text-slate-400 border border-slate-700 flex items-center justify-center">
+              <i class="fa-solid fa-camera text-3xl"></i>
+            </div>
+            <div>
+              <h3 class="text-white font-bold text-lg">Camera is Inactive</h3>
+              <p class="text-slate-400 text-xs sm:text-sm max-w-sm mt-1">
+                Click <strong>"Start Camera"</strong> below to begin streaming from your webcam or mobile camera.
+              </p>
+            </div>
+            <button id="quickStartBtn" class="px-6 py-3 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-600/30 transition-all flex items-center space-x-2">
+              <i class="fa-solid fa-play"></i>
+              <span>Start Camera</span>
+            </button>
+          </div>
+
+          <!-- HUD Top Overlay: Status and Performance Badge -->
+          <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
+            <!-- Status Badge -->
+            <div id="streamStatusBadge" class="flex items-center space-x-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-white text-xs font-semibold">
+              <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              <span id="statusText">Camera Off</span>
+            </div>
+
+            <!-- Latency & FPS Badge -->
+            <div id="fpsBadge" class="hidden sm:flex items-center space-x-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-xs text-sky-300 font-mono">
+              <i class="fa-solid fa-bolt text-yellow-400"></i>
+              <span id="latencyDisplay">0 ms</span>
+              <span class="text-white/40">&bull;</span>
+              <span id="fpsDisplay">0 FPS</span>
+            </div>
+          </div>
+
+          <!-- HUD Target Reticle / Canine Alignment Frame -->
+          <div id="targetReticle" class="absolute inset-12 sm:inset-16 border-2 border-emerald-400/40 rounded-2xl pointer-events-none transition-all duration-300 flex items-center justify-center hidden">
+            <!-- Corner Brackets -->
+            <div class="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-emerald-400 rounded-tl-lg"></div>
+            <div class="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-emerald-400 rounded-tr-lg"></div>
+            <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-emerald-400 rounded-bl-lg"></div>
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-emerald-400 rounded-br-lg"></div>
+            <span class="text-[10px] text-emerald-300/80 uppercase font-mono tracking-widest bg-black/50 px-2 py-0.5 rounded">Canine Focus Area</span>
+          </div>
+
+          <!-- HUD Bottom Overlay: Real-Time Detected Breed Floating Banner -->
+          <div id="hudBreedBanner" class="absolute bottom-3 left-3 right-3 bg-slate-900/90 backdrop-blur-md border border-white/10 p-3 rounded-xl flex items-center justify-between text-white z-20 shadow-lg hidden">
+            <div class="flex items-center space-x-3 overflow-hidden">
+              <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                <i class="fa-solid fa-dog text-base"></i>
+              </span>
+              <div class="truncate">
+                <p class="text-xs text-slate-400 font-mono">Detected Breed</p>
+                <p id="hudBreedName" class="text-sm font-bold text-white truncate">Analyzing stream...</p>
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <span id="hudConfidence" class="text-base font-extrabold text-emerald-400 font-mono">--%</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Video File Selector (Visible only in Video File tab) -->
+        <div id="videoFileInputContainer" class="p-4 bg-slate-800/80 border-t border-slate-700 hidden">
+          <label class="block text-xs font-semibold text-slate-300 mb-2">Select a Dog Video File (.mp4, .webm, .mov):</label>
+          <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-600 file:text-white hover:file:bg-sky-500 cursor-pointer">
+        </div>
+
+      </div>
+
+      <!-- Camera Toolbar & Action Controls -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+        
+        <!-- Primary Action Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          
+          <!-- Start/Stop Camera -->
+          <button id="toggleCameraBtn" class="py-3 px-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center space-x-2 text-sm">
+            <i class="fa-solid fa-camera"></i>
+            <span id="toggleCameraText">Start Camera</span>
+          </button>
+
+          <!-- Toggle Live Stream Detection -->
+          <button id="toggleDetectionBtn" disabled class="py-3 px-4 rounded-xl font-bold text-white bg-sky-600 hover:bg-sky-500 shadow-md shadow-sky-600/20 transition-all flex items-center justify-center space-x-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-bolt"></i>
+            <span id="toggleDetectionText">Live Stream Detection</span>
+          </button>
+
+          <!-- Snap & Deep Analyze -->
+          <button id="snapPhotoBtn" disabled class="py-3 px-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-camera-retro"></i>
+            <span>Snap &amp; Grad-CAM</span>
+          </button>
+
+        </div>
+
+        <!-- Configuration Settings Strip -->
+        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600">
+          
+          <!-- Camera Device Select -->
+          <div class="flex items-center space-x-2" id="cameraSelectWrapper">
+            <i class="fa-solid fa-video text-slate-400"></i>
+            <label for="cameraSelect" class="font-medium">Device:</label>
+            <select id="cameraSelect" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500 max-w-[200px] truncate">
+              <option value="">Default Camera</option>
+            </select>
+          </div>
+
+          <!-- Detection Frequency / Rate -->
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-gauge-high text-slate-400"></i>
+            <label for="rateSelect" class="font-medium">Refresh Rate:</label>
+            <select id="rateSelect" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              <option value="400">Fast (400ms &bull; ~2.5 FPS)</option>
+              <option value="750" selected>Balanced (750ms &bull; Recommended)</option>
+              <option value="1200">Eco (1.2s &bull; Low CPU)</option>
+            </select>
+          </div>
+
+          <!-- Mirror / Flip Toggle -->
+          <button type="button" id="flipBtn" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+            <i class="fa-solid fa-arrows-left-right text-slate-500"></i>
+            <span>Flip Video</span>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Right Column: Real-Time Results & Deep Analysis (5 cols) -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Live Classification Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <h2 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-magnifying-glass-chart text-sky-600"></i>
+            <span>Real-Time Predictions</span>
+          </h2>
+          <span id="liveStatusBadge" class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+            Idle
+          </span>
+        </div>
+
+        <!-- Top Predicted Breed Hero Box -->
+        <div id="topBreedCard" class="bg-gradient-to-br from-slate-50 to-sky-50/50 rounded-xl p-5 border border-slate-200 text-center space-y-2">
+          <p class="text-xs uppercase font-semibold tracking-wider text-slate-500">#1 Top Identified Breed</p>
+          <h3 id="topBreedName" class="text-xl sm:text-2xl font-extrabold text-slate-900">
+            Awaiting Stream...
+          </h3>
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-sm font-bold font-mono">
+            <i class="fa-solid fa-circle-check text-sky-600"></i>
+            <span id="topBreedConfidence">--% Confidence</span>
+          </div>
+        </div>
+
+        <!-- Top-3 Ranked Candidates Progress Bars -->
+        <div class="space-y-3">
+          <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Top 3 Candidates</p>
+
+          <!-- Rank 1 -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-semibold">
+              <span id="rank1Name" class="text-slate-800 truncate">1. --</span>
+              <span id="rank1Pct" class="text-sky-600 font-mono">--%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+              <div id="rank1Bar" class="bg-gradient-to-r from-sky-500 to-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Rank 2 -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-semibold">
+              <span id="rank2Name" class="text-slate-800 truncate">2. --</span>
+              <span id="rank2Pct" class="text-slate-500 font-mono">--%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div id="rank2Bar" class="bg-slate-400 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Rank 3 -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-semibold">
+              <span id="rank3Name" class="text-slate-800 truncate">3. --</span>
+              <span id="rank3Pct" class="text-slate-500 font-mono">--%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div id="rank3Bar" class="bg-slate-300 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Snapshot & Grad-CAM Explainability Card (Populated when user clicks "Snap & Deep Analyze") -->
+      <div id="snapshotCard" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4 hidden">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <h2 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i>
+            <span>Captured Snapshot &amp; Grad-CAM</span>
+          </h2>
+          <span class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2.5 py-0.5 rounded-full">Deep Analyzed</span>
+        </div>
+
+        <!-- Grad-CAM Image Container -->
+        <div class="space-y-3">
+          <div class="aspect-square w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200 relative group">
+            <img id="gradcamSnapshotImg" src="#" alt="Grad-CAM Overlay" class="w-full h-full object-contain">
+            <div class="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur text-white text-[11px] p-2 rounded-lg flex items-center justify-between">
+              <span>Grad-CAM Activation Heatmap</span>
+              <span id="snapshotBreedPill" class="font-bold text-amber-300 truncate"></span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            The warmer regions (red/yellow) indicate which visual anatomical features of the dog the convolutional neural network relied upon most strongly to produce this prediction.
+          </p>
+
+          <div class="flex items-center space-x-2 pt-2">
+            <a id="downloadSnapshotBtn" download="dog_breed_snapshot.png" href="#" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 text-center transition-colors flex items-center justify-center space-x-1">
+              <i class="fa-solid fa-download"></i>
+              <span>Save Snapshot</span>
+            </a>
+            <button id="dismissSnapshotBtn" class="py-2 px-3 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Detection History Stream -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-3">
+        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+          <span>Detection Stream Activity</span>
+          <button id="clearHistoryBtn" class="text-sky-600 hover:text-sky-700 text-[11px] font-normal underline">Clear</button>
+        </h3>
+        <div id="detectionHistoryList" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-xs">
+          <p class="text-slate-400 italic text-center py-4">No frames analyzed yet. Start the camera and detection to view real-time log.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Client-side Live Video Streaming & Inference Logic -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Elements
+  const webcamVideo = document.getElementById("webcamVideo");
+  const localVideo = document.getElementById("localVideo");
+  const captureCanvas = document.getElementById("captureCanvas");
+  const cameraOffPlaceholder = document.getElementById("cameraOffPlaceholder");
+  const quickStartBtn = document.getElementById("quickStartBtn");
+  const toggleCameraBtn = document.getElementById("toggleCameraBtn");
+  const toggleCameraText = document.getElementById("toggleCameraText");
+  const toggleDetectionBtn = document.getElementById("toggleDetectionBtn");
+  const toggleDetectionText = document.getElementById("toggleDetectionText");
+  const snapPhotoBtn = document.getElementById("snapPhotoBtn");
+  const cameraSelect = document.getElementById("cameraSelect");
+  const rateSelect = document.getElementById("rateSelect");
+  const flipBtn = document.getElementById("flipBtn");
+  const streamStatusBadge = document.getElementById("streamStatusBadge");
+  const statusDot = document.getElementById("statusDot");
+  const statusText = document.getElementById("statusText");
+  const targetReticle = document.getElementById("targetReticle");
+  const hudBreedBanner = document.getElementById("hudBreedBanner");
+  const hudBreedName = document.getElementById("hudBreedName");
+  const hudConfidence = document.getElementById("hudConfidence");
+  const latencyDisplay = document.getElementById("latencyDisplay");
+  const fpsDisplay = document.getElementById("fpsDisplay");
+  const liveStatusBadge = document.getElementById("liveStatusBadge");
+
+  // Output cards
+  const topBreedName = document.getElementById("topBreedName");
+  const topBreedConfidence = document.getElementById("topBreedConfidence");
+  const rank1Name = document.getElementById("rank1Name");
+  const rank1Pct = document.getElementById("rank1Pct");
+  const rank1Bar = document.getElementById("rank1Bar");
+  const rank2Name = document.getElementById("rank2Name");
+  const rank2Pct = document.getElementById("rank2Pct");
+  const rank2Bar = document.getElementById("rank2Bar");
+  const rank3Name = document.getElementById("rank3Name");
+  const rank3Pct = document.getElementById("rank3Pct");
+  const rank3Bar = document.getElementById("rank3Bar");
+  const detectionHistoryList = document.getElementById("detectionHistoryList");
+  const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+
+  // Snapshot card
+  const snapshotCard = document.getElementById("snapshotCard");
+  const gradcamSnapshotImg = document.getElementById("gradcamSnapshotImg");
+  const snapshotBreedPill = document.getElementById("snapshotBreedPill");
+  const downloadSnapshotBtn = document.getElementById("downloadSnapshotBtn");
+  const dismissSnapshotBtn = document.getElementById("dismissSnapshotBtn");
+
+  // Tabs
+  const tabWebcamBtn = document.getElementById("tabWebcamBtn");
+  const tabVideoFileBtn = document.getElementById("tabVideoFileBtn");
+  const videoFileInputContainer = document.getElementById("videoFileInputContainer");
+  const videoFileInput = document.getElementById("videoFileInput");
+
+  // State
+  let mediaStream = null;
+  let isCameraActive = false;
+  let isDetecting = false;
+  let isProcessingFrame = false;
+  let detectionTimer = null;
+  let isFlipped = false;
+  let currentMode = "webcam"; // "webcam" or "video_file"
+  let frameCount = 0;
+  let lastFpsCalcTime = performance.now();
+
+  // Tab switching
+  tabWebcamBtn.addEventListener("click", () => {
+    currentMode = "webcam";
+    tabWebcamBtn.className = "px-4 py-2 rounded-xl text-sm font-bold bg-sky-600 text-white flex items-center space-x-2 transition-all shadow-sm";
+    tabVideoFileBtn.className = "px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center space-x-2 transition-all";
+    videoFileInputContainer.classList.add("hidden");
+    localVideo.classList.add("hidden");
+    localVideo.pause();
+    webcamVideo.classList.remove("hidden");
+    if (!isCameraActive) {
+      cameraOffPlaceholder.classList.remove("hidden");
+    }
+  });
+
+  tabVideoFileBtn.addEventListener("click", () => {
+    currentMode = "video_file";
+    tabVideoFileBtn.className = "px-4 py-2 rounded-xl text-sm font-bold bg-sky-600 text-white flex items-center space-x-2 transition-all shadow-sm";
+    tabWebcamBtn.className = "px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center space-x-2 transition-all";
+    videoFileInputContainer.classList.remove("hidden");
+    cameraOffPlaceholder.classList.add("hidden");
+    webcamVideo.classList.add("hidden");
+    localVideo.classList.remove("hidden");
+    toggleCameraBtn.classList.add("hidden");
+    toggleDetectionBtn.disabled = !localVideo.src;
+    snapPhotoBtn.disabled = !localVideo.src;
+  });
+
+  // Load available video inputs
+  async function enumerateVideoDevices() {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(d => d.kind === "videoinput");
+      cameraSelect.innerHTML = "";
+      if (videoDevices.length === 0) {
+        cameraSelect.innerHTML = `<option value="">Default Camera</option>`;
+      } else {
+        videoDevices.forEach((device, index) => {
+          const opt = document.createElement("option");
+          opt.value = device.deviceId;
+          opt.text = device.label || `Camera ${index + 1}`;
+          cameraSelect.appendChild(opt);
+        });
+      }
+    } catch (err) {
+      console.warn("Could not list video devices:", err);
+    }
+  }
+
+  // Start Camera
+  async function startCamera() {
+    try {
+      const selectedDeviceId = cameraSelect.value;
+      const constraints = {
+        video: selectedDeviceId ? { deviceId: { exact: selectedDeviceId } } : { facingMode: "environment", width: { ideal: 640 }, height: { ideal: 480 } },
+        audio: false,
+      };
+
+      mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      webcamVideo.srcObject = mediaStream;
+      await webcamVideo.play();
+
+      isCameraActive = true;
+      cameraOffPlaceholder.classList.add("hidden");
+      targetReticle.classList.remove("hidden");
+      toggleCameraText.textContent = "Stop Camera";
+      toggleCameraBtn.classList.replace("bg-emerald-600", "bg-rose-600");
+      toggleCameraBtn.classList.replace("hover:bg-emerald-500", "hover:bg-rose-500");
+
+      toggleDetectionBtn.disabled = false;
+      snapPhotoBtn.disabled = false;
+
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+      statusText.textContent = "Live Stream Active";
+      liveStatusBadge.textContent = "Camera Ready";
+      liveStatusBadge.className = "text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+
+      await enumerateVideoDevices();
+    } catch (err) {
+      console.error("Camera access error:", err);
+      alert(`Unable to access camera: ${err.message}. Please check browser permissions.`);
+    }
+  }
+
+  // Stop Camera
+  function stopCamera() {
+    if (isDetecting) {
+      stopDetection();
+    }
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+      mediaStream = null;
+    }
+    webcamVideo.srcObject = null;
+    isCameraActive = false;
+    cameraOffPlaceholder.classList.remove("hidden");
+    targetReticle.classList.add("hidden");
+    hudBreedBanner.classList.add("hidden");
+
+    toggleCameraText.textContent = "Start Camera";
+    toggleCameraBtn.classList.replace("bg-rose-600", "bg-emerald-600");
+    toggleCameraBtn.classList.replace("hover:bg-rose-500", "hover:bg-emerald-500");
+
+    toggleDetectionBtn.disabled = true;
+    snapPhotoBtn.disabled = true;
+
+    statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+    statusText.textContent = "Camera Off";
+    liveStatusBadge.textContent = "Idle";
+    liveStatusBadge.className = "text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600";
+  }
+
+  toggleCameraBtn.addEventListener("click", () => {
+    if (isCameraActive) {
+      stopCamera();
+    } else {
+      startCamera();
+    }
+  });
+
+  quickStartBtn.addEventListener("click", startCamera);
+
+  // Flip Video
+  flipBtn.addEventListener("click", () => {
+    isFlipped = !isFlipped;
+    webcamVideo.style.transform = isFlipped ? "scaleX(-1)" : "scaleX(1)";
+    flipBtn.classList.toggle("bg-sky-50", isFlipped);
+    flipBtn.classList.toggle("border-sky-300", isFlipped);
+  });
+
+  // Switch Camera Device
+  cameraSelect.addEventListener("change", () => {
+    if (isCameraActive) {
+      stopCamera();
+      startCamera();
+    }
+  });
+
+  // Capture current video frame as base64 JPEG
+  function captureCurrentFrame(quality = 0.75, width = 320, height = 320) {
+    const video = currentMode === "webcam" ? webcamVideo : localVideo;
+    if (!video || (!video.videoWidth && video.readyState < 2)) return null;
+
+    captureCanvas.width = width;
+    captureCanvas.height = height;
+    const ctx = captureCanvas.getContext("2d");
+
+    // Handle flip if enabled
+    if (isFlipped && currentMode === "webcam") {
+      ctx.save();
+      ctx.translate(width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, width, height);
+      ctx.restore();
+    } else {
+      ctx.drawImage(video, 0, 0, width, height);
+    }
+
+    return captureCanvas.toDataURL("image/jpeg", quality);
+  }
+
+  // Update Prediction UI
+  function updatePredictionUI(topPred, candidates, latencyMs) {
+    if (!topPred) return;
+
+    // HUD Banner
+    hudBreedBanner.classList.remove("hidden");
+    hudBreedName.textContent = topPred.display_name;
+    hudConfidence.textContent = `${topPred.percentage}%`;
+
+    // Right Top Card
+    topBreedName.textContent = topPred.display_name;
+    topBreedConfidence.textContent = `${topPred.percentage}% Confidence`;
+
+    // Candidate progress bars
+    if (candidates && candidates.length >= 3) {
+      rank1Name.textContent = `1. ${candidates[0].display_name}`;
+      rank1Pct.textContent = `${candidates[0].percentage}%`;
+      rank1Bar.style.width = `${Math.min(100, candidates[0].percentage)}%`;
+
+      rank2Name.textContent = `2. ${candidates[1].display_name}`;
+      rank2Pct.textContent = `${candidates[1].percentage}%`;
+      rank2Bar.style.width = `${Math.min(100, candidates[1].percentage)}%`;
+
+      rank3Name.textContent = `3. ${candidates[2].display_name}`;
+      rank3Pct.textContent = `${candidates[2].percentage}%`;
+      rank3Bar.style.width = `${Math.min(100, candidates[2].percentage)}%`;
+    }
+
+    // Latency & FPS
+    latencyDisplay.textContent = `${Math.round(latencyMs)} ms`;
+    frameCount++;
+    const now = performance.now();
+    const elapsed = (now - lastFpsCalcTime) / 1000;
+    if (elapsed >= 1.0) {
+      const fps = (frameCount / elapsed).toFixed(1);
+      fpsDisplay.textContent = `${fps} FPS`;
+      frameCount = 0;
+      lastFpsCalcTime = now;
+    }
+
+    // Add to history list
+    appendHistoryItem(topPred.display_name, topPred.percentage, latencyMs);
+  }
+
+  function appendHistoryItem(name, pct, latency) {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const item = document.createElement("div");
+    item.className = "flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-colors";
+    item.innerHTML = `
+      <div class="flex items-center space-x-2 truncate">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <span class="font-bold text-slate-800 truncate">${name}</span>
+      </div>
+      <div class="flex items-center space-x-2 shrink-0 font-mono text-[11px]">
+        <span class="text-sky-600 font-bold">${pct}%</span>
+        <span class="text-slate-400 text-[10px]">${Math.round(latency)}ms</span>
+      </div>
+    `;
+
+    // Remove placeholder if present
+    if (detectionHistoryList.querySelector("p")) {
+      detectionHistoryList.innerHTML = "";
+    }
+
+    detectionHistoryList.prepend(item);
+    // Keep max 15 entries
+    while (detectionHistoryList.children.length > 15) {
+      detectionHistoryList.removeChild(detectionHistoryList.lastChild);
+    }
+  }
+
+  clearHistoryBtn.addEventListener("click", () => {
+    detectionHistoryList.innerHTML = '<p class="text-slate-400 italic text-center py-4">Detection stream cleared.</p>';
+  });
+
+  // Single Frame Detection Cycle
+  async function processStreamFrame() {
+    if (isProcessingFrame) return;
+    const base64Image = captureCurrentFrame(0.70, 224, 224);
+    if (!base64Image) return;
+
+    isProcessingFrame = true;
+    try {
+      const response = await fetch("/api/predict-live", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64Image, top_k: 3 }),
+      });
+
+      if (response.ok) {
+        const payload = await response.json();
+        if (payload.status === "success") {
+          updatePredictionUI(payload.top_prediction, payload.top_k_predictions, payload.latency_ms);
+        }
+      }
+    } catch (err) {
+      console.warn("Frame detection fetch warning:", err);
+    } finally {
+      isProcessingFrame = false;
+    }
+  }
+
+  // Start Live Detection Loop
+  function startDetection() {
+    if (isDetecting) return;
+    isDetecting = true;
+    const intervalMs = parseInt(rateSelect.value, 10) || 750;
+
+    toggleDetectionText.textContent = "Pause Live Detection";
+    toggleDetectionBtn.classList.replace("bg-sky-600", "bg-amber-600");
+    toggleDetectionBtn.classList.replace("hover:bg-sky-500", "hover:bg-amber-500");
+
+    liveStatusBadge.textContent = "Detecting Live";
+    liveStatusBadge.className = "text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 animate-pulse";
+
+    // Immediate first tick
+    processStreamFrame();
+    detectionTimer = setInterval(processStreamFrame, intervalMs);
+  }
+
+  // Stop Live Detection Loop
+  function stopDetection() {
+    if (!isDetecting) return;
+    isDetecting = false;
+    if (detectionTimer) {
+      clearInterval(detectionTimer);
+      detectionTimer = null;
+    }
+
+    toggleDetectionText.textContent = "Live Stream Detection";
+    toggleDetectionBtn.classList.replace("bg-amber-600", "bg-sky-600");
+    toggleDetectionBtn.classList.replace("hover:bg-amber-500", "hover:bg-sky-500");
+
+    liveStatusBadge.textContent = "Paused";
+    liveStatusBadge.className = "text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-100 text-amber-800";
+  }
+
+  toggleDetectionBtn.addEventListener("click", () => {
+    if (isDetecting) {
+      stopDetection();
+    } else {
+      startDetection();
+    }
+  });
+
+  rateSelect.addEventListener("change", () => {
+    if (isDetecting) {
+      stopDetection();
+      startDetection();
+    }
+  });
+
+  // Snap & Deep Analyze with Grad-CAM
+  snapPhotoBtn.addEventListener("click", async () => {
+    const highResFrame = captureCurrentFrame(0.90, 448, 448);
+    if (!highResFrame) return;
+
+    snapPhotoBtn.disabled = true;
+    const originalText = snapPhotoBtn.innerHTML;
+    snapPhotoBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Analyzing...</span>`;
+
+    try {
+      const response = await fetch("/api/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: highResFrame, top_k: 3, explain: true }),
+      });
+
+      if (response.ok) {
+        const payload = await response.json();
+        if (payload.status === "success" && payload.data) {
+          const data = payload.data;
+          updatePredictionUI(data.top_prediction, data.top_k_predictions, data.latency_ms);
+
+          // Populate snapshot & Grad-CAM card
+          if (data.gradcam_base64) {
+            gradcamSnapshotImg.src = data.gradcam_base64;
+            downloadSnapshotBtn.href = data.gradcam_base64;
+          } else {
+            gradcamSnapshotImg.src = highResFrame;
+            downloadSnapshotBtn.href = highResFrame;
+          }
+          snapshotBreedPill.textContent = `${data.top_prediction.display_name} (${data.top_prediction.percentage}%)`;
+          snapshotCard.classList.remove("hidden");
+          snapshotCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      } else {
+        const errPayload = await response.json().catch(() => ({}));
+        alert(`Analysis error: ${errPayload.message || response.statusText}`);
+      }
+    } catch (err) {
+      console.error("Snap error:", err);
+      alert(`Snap & Analyze failed: ${err.message}`);
+    } finally {
+      snapPhotoBtn.disabled = false;
+      snapPhotoBtn.innerHTML = originalText;
+    }
+  });
+
+  dismissSnapshotBtn.addEventListener("click", () => {
+    snapshotCard.classList.add("hidden");
+  });
+
+  // Local Video File handling
+  videoFileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fileUrl = URL.createObjectURL(file);
+    localVideo.src = fileUrl;
+    localVideo.play();
+
+    toggleDetectionBtn.disabled = false;
+    snapPhotoBtn.disabled = false;
+    statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+    statusText.textContent = `Video: ${file.name}`;
+    targetReticle.classList.remove("hidden");
+  });
+
+  // Initial setup
+  enumerateVideoDevices();
+});
+</script>
+{% endblock %}

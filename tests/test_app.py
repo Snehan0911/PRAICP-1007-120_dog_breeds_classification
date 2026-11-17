@@ -3,6 +3,7 @@ Web Application and REST API Integration Tests.
 Project: Dog Breeds Classification (PRAICP-1007-120)
 """
 
+import base64
 import io
 from pathlib import Path
 
@@ -110,5 +111,65 @@ def test_api_predict_success(client):
 def test_api_predict_missing_file(client):
     response = client.post("/api/predict", data={}, content_type="multipart/form-data")
     assert response.status_code == 400
+    payload = response.get_json()
+    assert payload["status"] == "error"
+
+
+def test_live_route(client):
+    response = client.get("/live")
+    assert response.status_code == 200
+    html = response.data.decode("utf-8")
+    assert "Live Camera" in html
+    assert "Real-Time Streaming" in html
+    assert "Snap &amp; Grad-CAM" in html
+
+
+def test_api_predict_json_base64_success(client):
+    sample_path = Path("dog_photos/samples/Chihuahua_sample.jpg")
+    with open(sample_path, "rb") as f:
+        img_bytes = f.read()
+    b64_str = f"data:image/jpeg;base64,{base64.b64encode(img_bytes).decode('utf-8')}"
+
+    response = client.post(
+        "/api/predict",
+        json={"image": b64_str, "top_k": 3, "explain": True},
+    )
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["status"] == "success"
+    assert "data" in payload
+    assert "top_prediction" in payload["data"]
+    assert len(payload["data"]["top_k_predictions"]) == 3
+    assert payload["data"]["gradcam_base64"].startswith("data:image/png;base64,")
+
+
+def test_api_predict_live_success(client):
+    sample_path = Path("dog_photos/samples/golden_retriever_sample.jpg")
+    with open(sample_path, "rb") as f:
+        img_bytes = f.read()
+    b64_str = f"data:image/jpeg;base64,{base64.b64encode(img_bytes).decode('utf-8')}"
+
+    response = client.post(
+        "/api/predict-live",
+        json={"image": b64_str, "top_k": 3},
+    )
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["status"] == "success"
+    assert "top_prediction" in payload
+    assert "top_k_predictions" in payload
+    assert payload["latency_ms"] > 0
+
+
+def test_api_predict_live_missing_image(client):
+    response = client.post("/api/predict-live", json={})
+    assert response.status_code == 400
+    payload = response.get_json()
+    assert payload["status"] == "error"
+
+
+def test_api_predict_live_malformed_base64(client):
+    response = client.post("/api/predict-live", json={"image": "invalid_base64_content!!!"})
+    assert response.status_code in (400, 422)
     payload = response.get_json()
     assert payload["status"] == "error"

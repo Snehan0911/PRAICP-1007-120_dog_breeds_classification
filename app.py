@@ -10,6 +10,7 @@ and reviewing model evaluation analytics.
 
 from __future__ import annotations
 
+import base64
 import logging
 import os
 import sys
@@ -72,6 +73,31 @@ def get_predictor() -> DogBreedPredictor:
             enable_gradcam=True,
         )
     return _predictor_instance
+
+
+def decode_base64_image(data_uri: str) -> bytes:
+    """
+    Decodes a base64 Data URI or raw base64 string to binary image bytes.
+
+    Args:
+        data_uri: Base64 data URI (e.g. 'data:image/jpeg;base64,...') or raw string.
+
+    Returns:
+        Decoded image bytes.
+
+    Raises:
+        ValueError: If input is empty, malformed, or cannot be base64-decoded.
+    """
+    if not data_uri or not isinstance(data_uri, str):
+        raise ValueError("Image data must be a non-empty string.")
+    if "," in data_uri:
+        _, encoded = data_uri.split(",", 1)
+    else:
+        encoded = data_uri
+    try:
+        return base64.b64decode(encoded)
+    except (ValueError, TypeError) as exc:
+        raise ValueError(f"Malformed base64 image encoding: {exc}") from exc
 
 
 def get_sample_dogs() -> list[dict[str, str]]:
@@ -205,6 +231,12 @@ def model_info():
     return render_template("model_info.html")
 
 
+@app.route("/live")
+def live():
+    """Renders the real-time live camera and video stream dog breed classifier."""
+    return render_template("live.html")
+
+
 @app.route("/about")
 def about():
     """Renders project documentation, engineering standards, and limitations."""
@@ -218,25 +250,45 @@ def about():
 def api_predict():
     """
     Programmatic inference API endpoint.
-    Accepts multipart/form-data with 'image' file.
+    Accepts:
+      1. multipart/form-data with 'image' file.
+      2. application/json with 'image' (base64 Data URI or raw string), optional 'top_k', 'explain'.
     Returns JSON formatted prediction payload.
     """
-    if "image" not in request.files:
-        return jsonify({"status": "error", "message": "Missing 'image' in multipart upload"}), 400
+    file_bytes: bytes | None = None
+    filename: str | None = None
+    top_k = 3
+    explain = True
 
-    file = request.files["image"]
-    if not file or file.filename == "":
-        return jsonify({"status": "error", "message": "Empty file uploaded"}), 400
+    if request.is_json:
+        payload = request.get_json(silent=True) or {}
+        image_b64 = payload.get("image")
+        if not image_b64:
+            return jsonify({"status": "error", "message": "Missing 'image' key in JSON payload"}), 400
+        try:
+            file_bytes = decode_base64_image(image_b64)
+            filename = "camera_capture.jpg"
+        except ValueError as e:
+            return jsonify({"status": "error", "message": str(e)}), 400
+        top_k = int(payload.get("top_k", 3))
+        explain = bool(payload.get("explain", True))
+    elif "image" in request.files:
+        file = request.files["image"]
+        if not file or file.filename == "":
+            return jsonify({"status": "error", "message": "Empty file uploaded"}), 400
+        file_bytes = file.read()
+        filename = file.filename
+        top_k = int(request.form.get("top_k", 3))
+        explain = request.form.get("explain", "true").lower() in ("true", "1", "yes")
+    else:
+        return jsonify({"status": "error", "message": "Missing 'image' in multipart upload or JSON body"}), 400
 
-    file_bytes = file.read()
-    validation = ImageValidator.validate_bytes(file_bytes, filename=file.filename)
+    validation = ImageValidator.validate_bytes(file_bytes, filename=filename)
     if not validation.is_valid:
         return jsonify({"status": "error", "message": validation.error_message}), 422
 
     predictor = get_predictor()
     try:
-        top_k = int(request.form.get("top_k", 3))
-        explain = request.form.get("explain", "true").lower() in ("true", "1", "yes")
         prediction_output = predictor.predict(file_bytes, top_k=top_k, explain=explain)
         return jsonify({
             "status": "success",
@@ -244,6 +296,58 @@ def api_predict():
         }), 200
     except (ValueError, RuntimeError, TypeError, KeyError, OSError) as e:
         logger.error("API inference failed: %s", e)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route("/api/predict-live", methods=["POST"])
+def api_predict_live():
+    """
+    High-frequency inference endpoint optimized for live video stream frames.
+    Accepts application/json:
+      {
+        "image": "data:image/jpeg;base64,...",
+        "top_k": 3
+      }
+    Runs rapid feedforward classification without Grad-CAM for low-latency (<100ms) streaming.
+    """
+    if not request.is_json:
+        # Check if sent via multipart form
+        image_b64 = request.form.get("image")
+        if not image_b64 and "image" in request.files:
+            file_bytes = request.files["image"].read()
+        elif image_b64:
+            try:
+                file_bytes = decode_base64_image(image_b64)
+            except ValueError as e:
+                return jsonify({"status": "error", "message": str(e)}), 400
+        else:
+            return jsonify({"status": "error", "message": "Expected JSON payload with 'image' key"}), 400
+    else:
+        payload = request.get_json(silent=True) or {}
+        image_b64 = payload.get("image")
+        if not image_b64:
+            return jsonify({"status": "error", "message": "Missing 'image' in JSON payload"}), 400
+        try:
+            file_bytes = decode_base64_image(image_b64)
+        except ValueError as e:
+            return jsonify({"status": "error", "message": str(e)}), 400
+
+    if len(file_bytes) < 100:
+        return jsonify({"status": "error", "message": "Frame payload too small"}), 422
+
+    predictor = get_predictor()
+    try:
+        # Run inference with explain=False for maximum FPS and sub-100ms CPU latency
+        prediction_output = predictor.predict(file_bytes, top_k=3, explain=False)
+        out_dict = prediction_output.to_dict()
+        return jsonify({
+            "status": "success",
+            "top_prediction": out_dict["top_prediction"],
+            "top_k_predictions": out_dict["top_k_predictions"],
+            "latency_ms": out_dict["latency_ms"],
+        }), 200
+    except (ValueError, RuntimeError, TypeError, KeyError, OSError) as e:
+        logger.error("Live streaming inference error: %s", e)
         return jsonify({"status": "error", "message": str(e)}), 500
 
 

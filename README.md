@@ -199,14 +199,17 @@ python -m venv .venv
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 4. Run automated test suite (40 tests)
+# 4. Run automated test suite (45 tests)
 pytest -v
 
 # 5. Start the web application
 python app.py
 ```
 
-Open your browser to `http://localhost:5000` to interact with the web interface.
+Open your browser to:
+- **Web Classifier & Upload:** `http://localhost:5000`
+- **Live Camera & Real-Time Video Stream:** `http://localhost:5000/live`
+- **Analytics & Model Architecture:** `http://localhost:5000/analytics` and `http://localhost:5000/model-info`
 
 ---
 
@@ -282,7 +285,61 @@ curl -X POST http://localhost:5000/api/predict \
 }
 ```
 
-### 2. Health Check
+### 2. High-Frequency Live Stream Prediction
+- **Endpoint:** `POST /api/predict-live`
+- **Content-Type:** `application/json`
+- **Description:** Optimized for real-time webcam and video frame classification without Grad-CAM overhead (~85-95ms latency).
+- **Parameters:**
+  - `image`: Base64 Data URI string (`data:image/jpeg;base64,...`)
+  - `top_k` *(optional)*: Integer number of candidates (default: `3`)
+
+#### Sample JSON Payload
+```json
+{
+  "image": "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
+  "top_k": 3
+}
+```
+
+#### Sample JSON Response
+```json
+{
+  "status": "success",
+  "top_prediction": {
+    "rank": 1,
+    "breed": "golden_retriever",
+    "display_name": "Golden Retriever",
+    "probability": 0.9425,
+    "percentage": 94.25
+  },
+  "top_k_predictions": [
+    {
+      "rank": 1,
+      "breed": "golden_retriever",
+      "display_name": "Golden Retriever",
+      "probability": 0.9425,
+      "percentage": 94.25
+    },
+    {
+      "rank": 2,
+      "breed": "Labrador_retriever",
+      "display_name": "Labrador Retriever",
+      "probability": 0.0312,
+      "percentage": 3.12
+    },
+    {
+      "rank": 3,
+      "breed": "cocker_spaniel",
+      "display_name": "Cocker Spaniel",
+      "probability": 0.0084,
+      "percentage": 0.84
+    }
+  ],
+  "latency_ms": 87.84
+}
+```
+
+### 3. Health Check
 - **Endpoint:** `GET /health`
 - **Response:**
 ```json
