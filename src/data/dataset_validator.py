@@ -79,6 +79,15 @@ class DatasetValidator:
             json.dump(mapping, f, indent=2)
         return mapping
 
+    def load_existing_labels(self, path: Optional[str | Path] = None) -> pd.DataFrame:
+        """Loads metadata from existing labels.csv into validator instance."""
+        target = Path(path) if path else self.output_labels_path
+        if not target.exists():
+            raise FileNotFoundError(f"Cannot find labels file at {target}")
+        self.df_metadata = pd.read_csv(target)
+        logger.info(f"Loaded existing metadata from {target} ({len(self.df_metadata)} rows)")
+        return self.df_metadata
+
     def scan_and_validate(self, max_samples: Optional[int] = None) -> pd.DataFrame:
         """
         Scans all breed folders, verifies every image using PIL, records resolution
