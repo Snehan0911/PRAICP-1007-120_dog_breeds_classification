@@ -18,8 +18,7 @@ from .efficientnet_model import build_efficientnet_b0
 from .mobilenet_model import build_mobilenet_v2
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
 )
 logger = logging.getLogger("ModelFactory")
 

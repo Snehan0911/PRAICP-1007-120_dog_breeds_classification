@@ -1,0 +1,128 @@
+{
+  "top_confused_pairs": [
+    {
+      "true_breed": "Collie",
+      "predicted_breed": "Shetland Sheepdog",
+      "count": 5
+    },
+    {
+      "true_breed": "English Foxhound",
+      "predicted_breed": "Beagle",
+      "count": 5
+    },
+    {
+      "true_breed": "Brittany Spaniel",
+      "predicted_breed": "Welsh Springer Spaniel",
+      "count": 4
+    },
+    {
+      "true_breed": "Newfoundland",
+      "predicted_breed": "Great Pyrenees",
+      "count": 4
+    },
+    {
+      "true_breed": "Affenpinscher",
+      "predicted_breed": "Cairn",
+      "count": 4
+    },
+    {
+      "true_breed": "Rhodesian Ridgeback",
+      "predicted_breed": "Bull Mastiff",
+      "count": 3
+    },
+    {
+      "true_breed": "Boston Bull",
+      "predicted_breed": "African Hunting Dog",
+      "count": 3
+    },
+    {
+      "true_breed": "Norwich Terrier",
+      "predicted_breed": "Cairn",
+      "count": 3
+    },
+    {
+      "true_breed": "Lhasa",
+      "predicted_breed": "Shih-Tzu",
+      "count": 3
+    },
+    {
+      "true_breed": "Boston Bull",
+      "predicted_breed": "Pug",
+      "count": 3
+    }
+  ],
+  "top_performing_breeds": [
+    {
+      "breed": "Pomeranian",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 3.0
+    },
+    {
+      "breed": "Keeshond",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 2.0
+    },
+    {
+      "breed": "Dhole",
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1_score": 0.8571,
+      "support": 4.0
+    },
+    {
+      "breed": "Maltese Dog",
+      "precision": 0.7143,
+      "recall": 1.0,
+      "f1_score": 0.8333,
+      "support": 5.0
+    },
+    {
+      "breed": "Bluetick",
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1_score": 0.8,
+      "support": 2.0
+    }
+  ],
+  "lowest_performing_breeds": [
+    {
+      "breed": "Affenpinscher",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 6.0
+    },
+    {
+      "breed": "Brabancon Griffon",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 2.0
+    },
+    {
+      "breed": "Cardigan",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 4.0
+    },
+    {
+      "breed": "Toy Poodle",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 2.0
+    },
+    {
+      "breed": "Standard Poodle",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 4.0
+    }
+  ]
+}

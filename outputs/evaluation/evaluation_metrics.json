@@ -1,0 +1,13 @@
+{
+  "model_path": "model\\saved_models\\best_model.keras",
+  "total_test_samples": 500,
+  "total_classes": 120,
+  "top_1_accuracy": 0.33,
+  "top_3_accuracy": 0.526,
+  "precision_macro": 0.283,
+  "recall_macro": 0.3214,
+  "f1_score_macro": 0.2641,
+  "precision_weighted": 0.324,
+  "recall_weighted": 0.33,
+  "f1_score_weighted": 0.2872
+}

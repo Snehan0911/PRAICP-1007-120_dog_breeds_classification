@@ -8,8 +8,8 @@ from .experiment_tracker import ExperimentTracker
 from .trainer import ModelTrainer, set_seed
 
 __all__ = [
+    "ExperimentTracker",
     "ModelTrainer",
     "get_training_callbacks",
-    "ExperimentTracker",
     "set_seed",
 ]

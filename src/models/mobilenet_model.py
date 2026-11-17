@@ -14,8 +14,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
 )
 logger = logging.getLogger("MobileNetV2")
 
@@ -80,7 +79,9 @@ def build_mobilenet_v2(
                 f"Backbone frozen except top {unfreeze_top_n_layers} non-BatchNorm layers."
             )
         else:
-            logger.info("MobileNetV2 backbone completely frozen for feature extraction.")
+            logger.info(
+                "MobileNetV2 backbone completely frozen for feature extraction."
+            )
     else:
         base_model.trainable = True
         logger.info("MobileNetV2 backbone fully trainable (end-to-end training).")

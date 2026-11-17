@@ -15,7 +15,7 @@ import random
 import sys
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Ensure workspace root is in sys.path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -31,8 +31,7 @@ from src.training.callbacks import get_training_callbacks
 from src.training.experiment_tracker import ExperimentTracker
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
 )
 logger = logging.getLogger("ModelTrainer")
 
@@ -90,13 +89,15 @@ class ModelTrainer:
 
     def train(
         self,
-        steps_per_epoch: Optional[int] = None,
-        validation_steps: Optional[int] = None,
+        steps_per_epoch: int | None = None,
+        validation_steps: int | None = None,
     ) -> dict[str, Any]:
         """
         Executes end-to-end training and saves best and final models.
         """
-        logger.info(f"Starting training run for: {self.model_name} (Epochs: {self.epochs}, Batch Size: {self.batch_size})")
+        logger.info(
+            f"Starting training run for: {self.model_name} (Epochs: {self.epochs}, Batch Size: {self.batch_size})"
+        )
 
         # 1. Prepare Datasets
         train_ds = self.loader.get_dataset(
@@ -146,7 +147,9 @@ class ModelTrainer:
 
         model.save(str(best_model_export))
         model.save(str(final_model_export))
-        logger.info(f"Exported production models to: {best_model_export} and {final_model_export}")
+        logger.info(
+            f"Exported production models to: {best_model_export} and {final_model_export}"
+        )
 
         # 6. Log Experiment Metadata
         config_record = {
@@ -157,7 +160,9 @@ class ModelTrainer:
             "epochs": self.epochs,
             "seed": self.seed,
             "total_params": int(model.count_params()),
-            "trainable_params": int(sum(tf.keras.backend.count_params(w) for w in model.trainable_weights)),
+            "trainable_params": int(
+                sum(tf.keras.backend.count_params(w) for w in model.trainable_weights)
+            ),
         }
         self.tracker.log_run(
             model_name=self.model_name,
@@ -180,12 +185,18 @@ class ModelTrainer:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train Dog Breeds Classifier.")
-    parser.add_argument("--model", type=str, default="mobilenet_v2", help="Model architecture")
+    parser.add_argument(
+        "--model", type=str, default="mobilenet_v2", help="Model architecture"
+    )
     parser.add_argument("--epochs", type=int, default=3, help="Training epochs")
     parser.add_argument("--batch-size", type=int, default=32, help="Mini-batch size")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
-    parser.add_argument("--steps-per-epoch", type=int, default=None, help="Steps per epoch limit")
-    parser.add_argument("--val-steps", type=int, default=None, help="Validation steps limit")
+    parser.add_argument(
+        "--steps-per-epoch", type=int, default=None, help="Steps per epoch limit"
+    )
+    parser.add_argument(
+        "--val-steps", type=int, default=None, help="Validation steps limit"
+    )
 
     args = parser.parse_args()
 

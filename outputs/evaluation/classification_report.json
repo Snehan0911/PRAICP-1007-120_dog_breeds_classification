@@ -1,0 +1,735 @@
+{
+  "Chihuahua": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Japanese Spaniel": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Maltese Dog": {
+    "precision": 0.7142857142857143,
+    "recall": 1.0,
+    "f1-score": 0.8333333333333334,
+    "support": 5.0
+  },
+  "Pekinese": {
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.6666666666666666,
+    "support": 3.0
+  },
+  "Shih-Tzu": {
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1-score": 0.3333333333333333,
+    "support": 4.0
+  },
+  "Blenheim Spaniel": {
+    "precision": 0.6666666666666666,
+    "recall": 0.2857142857142857,
+    "f1-score": 0.4,
+    "support": 7.0
+  },
+  "Papillon": {
+    "precision": 0.5,
+    "recall": 0.25,
+    "f1-score": 0.3333333333333333,
+    "support": 4.0
+  },
+  "Toy Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Rhodesian Ridgeback": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 6.0
+  },
+  "Afghan Hound": {
+    "precision": 0.4,
+    "recall": 0.3333333333333333,
+    "f1-score": 0.36363636363636365,
+    "support": 6.0
+  },
+  "Basset": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Beagle": {
+    "precision": 0.0625,
+    "recall": 0.25,
+    "f1-score": 0.1,
+    "support": 4.0
+  },
+  "Bloodhound": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Bluetick": {
+    "precision": 0.6666666666666666,
+    "recall": 1.0,
+    "f1-score": 0.8,
+    "support": 2.0
+  },
+  "Black-And-Tan Coonhound": {
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1-score": 0.5,
+    "support": 4.0
+  },
+  "Walker Hound": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "English Foxhound": {
+    "precision": 0.5,
+    "recall": 0.14285714285714285,
+    "f1-score": 0.2222222222222222,
+    "support": 7.0
+  },
+  "Redbone": {
+    "precision": 0.2,
+    "recall": 0.2,
+    "f1-score": 0.2,
+    "support": 5.0
+  },
+  "Borzoi": {
+    "precision": 0.14285714285714285,
+    "recall": 1.0,
+    "f1-score": 0.25,
+    "support": 1.0
+  },
+  "Irish Wolfhound": {
+    "precision": 0.375,
+    "recall": 0.42857142857142855,
+    "f1-score": 0.4,
+    "support": 7.0
+  },
+  "Italian Greyhound": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 7.0
+  },
+  "Whippet": {
+    "precision": 0.3333333333333333,
+    "recall": 0.25,
+    "f1-score": 0.2857142857142857,
+    "support": 4.0
+  },
+  "Ibizan Hound": {
+    "precision": 0.4,
+    "recall": 0.4,
+    "f1-score": 0.4,
+    "support": 5.0
+  },
+  "Norwegian Elkhound": {
+    "precision": 0.3333333333333333,
+    "recall": 0.25,
+    "f1-score": 0.2857142857142857,
+    "support": 4.0
+  },
+  "Otterhound": {
+    "precision": 0.38461538461538464,
+    "recall": 1.0,
+    "f1-score": 0.5555555555555556,
+    "support": 5.0
+  },
+  "Saluki": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Scottish Deerhound": {
+    "precision": 0.25,
+    "recall": 0.3333333333333333,
+    "f1-score": 0.2857142857142857,
+    "support": 3.0
+  },
+  "Weimaraner": {
+    "precision": 1.0,
+    "recall": 0.125,
+    "f1-score": 0.2222222222222222,
+    "support": 8.0
+  },
+  "Staffordshire Bullterrier": {
+    "precision": 1.0,
+    "recall": 0.2,
+    "f1-score": 0.3333333333333333,
+    "support": 5.0
+  },
+  "American Staffordshire Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Bedlington Terrier": {
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1-score": 0.6666666666666666,
+    "support": 4.0
+  },
+  "Border Terrier": {
+    "precision": 0.6666666666666666,
+    "recall": 1.0,
+    "f1-score": 0.8,
+    "support": 2.0
+  },
+  "Kerry Blue Terrier": {
+    "precision": 0.6666666666666666,
+    "recall": 0.8,
+    "f1-score": 0.7272727272727273,
+    "support": 5.0
+  },
+  "Irish Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Norfolk Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Norwich Terrier": {
+    "precision": 0.4,
+    "recall": 0.4,
+    "f1-score": 0.4,
+    "support": 5.0
+  },
+  "Yorkshire Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Wire-Haired Fox Terrier": {
+    "precision": 0.2222222222222222,
+    "recall": 1.0,
+    "f1-score": 0.36363636363636365,
+    "support": 2.0
+  },
+  "Lakeland Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Sealyham Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1.0
+  },
+  "Airedale": {
+    "precision": 1.0,
+    "recall": 0.14285714285714285,
+    "f1-score": 0.25,
+    "support": 7.0
+  },
+  "Cairn": {
+    "precision": 0.125,
+    "recall": 0.5,
+    "f1-score": 0.2,
+    "support": 4.0
+  },
+  "Australian Terrier": {
+    "precision": 0.25,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.36363636363636365,
+    "support": 3.0
+  },
+  "Dandie Dinmont": {
+    "precision": 0.5,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.5714285714285714,
+    "support": 6.0
+  },
+  "Boston Bull": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 9.0
+  },
+  "Miniature Schnauzer": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 7.0
+  },
+  "Giant Schnauzer": {
+    "precision": 0.5,
+    "recall": 0.3333333333333333,
+    "f1-score": 0.4,
+    "support": 3.0
+  },
+  "Standard Schnauzer": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1.0
+  },
+  "Scotch Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Tibetan Terrier": {
+    "precision": 0.25,
+    "recall": 0.2,
+    "f1-score": 0.2222222222222222,
+    "support": 5.0
+  },
+  "Silky Terrier": {
+    "precision": 0.5454545454545454,
+    "recall": 0.75,
+    "f1-score": 0.631578947368421,
+    "support": 8.0
+  },
+  "Soft-Coated Wheaten Terrier": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "West Highland White Terrier": {
+    "precision": 1.0,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.8,
+    "support": 6.0
+  },
+  "Lhasa": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 5.0
+  },
+  "Flat-Coated Retriever": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 5.0
+  },
+  "Curly-Coated Retriever": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Golden Retriever": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Labrador Retriever": {
+    "precision": 0.25,
+    "recall": 0.75,
+    "f1-score": 0.375,
+    "support": 4.0
+  },
+  "Chesapeake Bay Retriever": {
+    "precision": 0.4666666666666667,
+    "recall": 0.7777777777777778,
+    "f1-score": 0.5833333333333334,
+    "support": 9.0
+  },
+  "German Short-Haired Pointer": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Vizsla": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "English Setter": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 5.0
+  },
+  "Irish Setter": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Gordon Setter": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Brittany Spaniel": {
+    "precision": 1.0,
+    "recall": 0.3333333333333333,
+    "f1-score": 0.5,
+    "support": 6.0
+  },
+  "Clumber": {
+    "precision": 0.6,
+    "recall": 0.6,
+    "f1-score": 0.6,
+    "support": 5.0
+  },
+  "English Springer": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Welsh Springer Spaniel": {
+    "precision": 0.16666666666666666,
+    "recall": 0.5,
+    "f1-score": 0.25,
+    "support": 4.0
+  },
+  "Cocker Spaniel": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0.0
+  },
+  "Sussex Spaniel": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Irish Water Spaniel": {
+    "precision": 0.25,
+    "recall": 0.5,
+    "f1-score": 0.3333333333333333,
+    "support": 2.0
+  },
+  "Kuvasz": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Schipperke": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Groenendael": {
+    "precision": 0.5714285714285714,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.6153846153846154,
+    "support": 6.0
+  },
+  "Malinois": {
+    "precision": 0.14285714285714285,
+    "recall": 0.25,
+    "f1-score": 0.18181818181818182,
+    "support": 4.0
+  },
+  "Briard": {
+    "precision": 0.5,
+    "recall": 0.4,
+    "f1-score": 0.4444444444444444,
+    "support": 5.0
+  },
+  "Kelpie": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Komondor": {
+    "precision": 0.6,
+    "recall": 0.75,
+    "f1-score": 0.6666666666666666,
+    "support": 4.0
+  },
+  "Old English Sheepdog": {
+    "precision": 0.8,
+    "recall": 0.8,
+    "f1-score": 0.8,
+    "support": 5.0
+  },
+  "Shetland Sheepdog": {
+    "precision": 0.13636363636363635,
+    "recall": 1.0,
+    "f1-score": 0.24,
+    "support": 3.0
+  },
+  "Collie": {
+    "precision": 0.5,
+    "recall": 0.16666666666666666,
+    "f1-score": 0.25,
+    "support": 6.0
+  },
+  "Border Collie": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Bouvier Des Flandres": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Rottweiler": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "German Shepherd": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Doberman": {
+    "precision": 0.2,
+    "recall": 0.5,
+    "f1-score": 0.2857142857142857,
+    "support": 2.0
+  },
+  "Miniature Pinscher": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Greater Swiss Mountain Dog": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Bernese Mountain Dog": {
+    "precision": 0.42857142857142855,
+    "recall": 0.75,
+    "f1-score": 0.5454545454545454,
+    "support": 4.0
+  },
+  "Appenzeller": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 5.0
+  },
+  "Entlebucher": {
+    "precision": 0.3333333333333333,
+    "recall": 0.5,
+    "f1-score": 0.4,
+    "support": 4.0
+  },
+  "Boxer": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Bull Mastiff": {
+    "precision": 0.25,
+    "recall": 0.5714285714285714,
+    "f1-score": 0.34782608695652173,
+    "support": 7.0
+  },
+  "Tibetan Mastiff": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "French Bulldog": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Great Dane": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Saint Bernard": {
+    "precision": 1.0,
+    "recall": 0.3333333333333333,
+    "f1-score": 0.5,
+    "support": 3.0
+  },
+  "Eskimo Dog": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "Malamute": {
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1-score": 0.6666666666666666,
+    "support": 2.0
+  },
+  "Siberian Husky": {
+    "precision": 0.2857142857142857,
+    "recall": 1.0,
+    "f1-score": 0.4444444444444444,
+    "support": 2.0
+  },
+  "Affenpinscher": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 6.0
+  },
+  "Basenji": {
+    "precision": 0.25,
+    "recall": 0.2857142857142857,
+    "f1-score": 0.26666666666666666,
+    "support": 7.0
+  },
+  "Pug": {
+    "precision": 0.5,
+    "recall": 0.625,
+    "f1-score": 0.5555555555555556,
+    "support": 8.0
+  },
+  "Leonberg": {
+    "precision": 0.5,
+    "recall": 0.5714285714285714,
+    "f1-score": 0.5333333333333333,
+    "support": 7.0
+  },
+  "Newfoundland": {
+    "precision": 0.14285714285714285,
+    "recall": 0.1,
+    "f1-score": 0.11764705882352941,
+    "support": 10.0
+  },
+  "Great Pyrenees": {
+    "precision": 0.2222222222222222,
+    "recall": 1.0,
+    "f1-score": 0.36363636363636365,
+    "support": 4.0
+  },
+  "Samoyed": {
+    "precision": 0.6,
+    "recall": 0.5,
+    "f1-score": 0.5454545454545454,
+    "support": 6.0
+  },
+  "Pomeranian": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 3.0
+  },
+  "Chow": {
+    "precision": 1.0,
+    "recall": 0.5,
+    "f1-score": 0.6666666666666666,
+    "support": 2.0
+  },
+  "Keeshond": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2.0
+  },
+  "Brabancon Griffon": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Pembroke": {
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.6666666666666666,
+    "support": 3.0
+  },
+  "Cardigan": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Toy Poodle": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "Miniature Poodle": {
+    "precision": 0.5,
+    "recall": 0.14285714285714285,
+    "f1-score": 0.2222222222222222,
+    "support": 7.0
+  },
+  "Standard Poodle": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "Mexican Hairless": {
+    "precision": 0.2727272727272727,
+    "recall": 0.6,
+    "f1-score": 0.375,
+    "support": 5.0
+  },
+  "Dingo": {
+    "precision": 0.8,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.7272727272727273,
+    "support": 6.0
+  },
+  "Dhole": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1-score": 0.8571428571428571,
+    "support": 4.0
+  },
+  "African Hunting Dog": {
+    "precision": 0.26666666666666666,
+    "recall": 0.4444444444444444,
+    "f1-score": 0.3333333333333333,
+    "support": 9.0
+  },
+  "accuracy": 0.33,
+  "macro avg": {
+    "precision": 0.2806223059348059,
+    "recall": 0.31869708994708995,
+    "f1-score": 0.26189921403335054,
+    "support": 500.0
+  },
+  "weighted avg": {
+    "precision": 0.3239593573093573,
+    "recall": 0.33,
+    "f1-score": 0.2872179693519564,
+    "support": 500.0
+  }
+}

@@ -16,11 +16,9 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
 )
 logger = logging.getLogger("ExperimentTracker")
 
@@ -69,16 +67,28 @@ class ExperimentTracker:
             "project_name": "Dog Breeds Classification",
             "project_id": "PRAICP-1007-120",
             "model_name": model_name,
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
             "duration_seconds": round(duration_seconds, 2),
             "configuration": config,
             "epochs_completed": len(history.get("loss", [])),
-            "final_train_loss": round(float(history["loss"][-1]), 4) if history.get("loss") else None,
-            "final_val_loss": round(float(history["val_loss"][-1]), 4) if history.get("val_loss") else None,
-            "final_train_accuracy": round(float(history["accuracy"][-1]), 4) if history.get("accuracy") else None,
-            "final_val_accuracy": round(float(history["val_accuracy"][-1]), 4) if history.get("val_accuracy") else None,
-            "best_val_accuracy": round(float(max(history["val_accuracy"])), 4) if history.get("val_accuracy") else None,
-            "history": {k: [round(float(v), 5) for v in vals] for k, vals in history.items()},
+            "final_train_loss": round(float(history["loss"][-1]), 4)
+            if history.get("loss")
+            else None,
+            "final_val_loss": round(float(history["val_loss"][-1]), 4)
+            if history.get("val_loss")
+            else None,
+            "final_train_accuracy": round(float(history["accuracy"][-1]), 4)
+            if history.get("accuracy")
+            else None,
+            "final_val_accuracy": round(float(history["val_accuracy"][-1]), 4)
+            if history.get("val_accuracy")
+            else None,
+            "best_val_accuracy": round(float(max(history["val_accuracy"])), 4)
+            if history.get("val_accuracy")
+            else None,
+            "history": {
+                k: [round(float(v), 5) for v in vals] for k, vals in history.items()
+            },
         }
 
         def _json_default(o: Any) -> Any:
@@ -117,10 +127,26 @@ class ExperimentTracker:
 
         # Panel 1: Loss
         if "loss" in history:
-            ax1.plot(epochs, history["loss"], "o-", color="#1f77b4", label="Training Loss", linewidth=2)
+            ax1.plot(
+                epochs,
+                history["loss"],
+                "o-",
+                color="#1f77b4",
+                label="Training Loss",
+                linewidth=2,
+            )
         if "val_loss" in history:
-            ax1.plot(epochs, history["val_loss"], "s--", color="#d62728", label="Validation Loss", linewidth=2)
-        ax1.set_title(f"{model_name} — Loss Convergence", fontsize=14, fontweight="bold")
+            ax1.plot(
+                epochs,
+                history["val_loss"],
+                "s--",
+                color="#d62728",
+                label="Validation Loss",
+                linewidth=2,
+            )
+        ax1.set_title(
+            f"{model_name} — Loss Convergence", fontsize=14, fontweight="bold"
+        )
         ax1.set_xlabel("Epoch", fontsize=12)
         ax1.set_ylabel("Categorical Cross-Entropy Loss", fontsize=12)
         ax1.grid(True, linestyle="--", alpha=0.6)
@@ -128,11 +154,32 @@ class ExperimentTracker:
 
         # Panel 2: Accuracy
         if "accuracy" in history:
-            ax2.plot(epochs, history["accuracy"], "o-", color="#2ca02c", label="Training Accuracy", linewidth=2)
+            ax2.plot(
+                epochs,
+                history["accuracy"],
+                "o-",
+                color="#2ca02c",
+                label="Training Accuracy",
+                linewidth=2,
+            )
         if "val_accuracy" in history:
-            ax2.plot(epochs, history["val_accuracy"], "s--", color="#ff7f0e", label="Validation Accuracy", linewidth=2)
+            ax2.plot(
+                epochs,
+                history["val_accuracy"],
+                "s--",
+                color="#ff7f0e",
+                label="Validation Accuracy",
+                linewidth=2,
+            )
         if "val_top_3_accuracy" in history:
-            ax2.plot(epochs, history["val_top_3_accuracy"], "^:", color="#9467bd", label="Val Top-3 Accuracy", linewidth=1.5)
+            ax2.plot(
+                epochs,
+                history["val_top_3_accuracy"],
+                "^:",
+                color="#9467bd",
+                label="Val Top-3 Accuracy",
+                linewidth=1.5,
+            )
 
         ax2.set_title(f"{model_name} — Accuracy Curves", fontsize=14, fontweight="bold")
         ax2.set_xlabel("Epoch", fontsize=12)
@@ -141,7 +188,12 @@ class ExperimentTracker:
         ax2.grid(True, linestyle="--", alpha=0.6)
         ax2.legend(fontsize=11)
 
-        plt.suptitle(f"Dog Breeds Classification — {model_name} Training Performance", fontsize=16, fontweight="bold", y=0.98)
+        plt.suptitle(
+            f"Dog Breeds Classification — {model_name} Training Performance",
+            fontsize=16,
+            fontweight="bold",
+            y=0.98,
+        )
         plt.tight_layout()
 
         curve_path = self.figures_dir / f"{model_name}_training_curves.png"

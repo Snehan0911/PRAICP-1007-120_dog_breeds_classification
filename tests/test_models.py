@@ -35,7 +35,9 @@ def test_custom_cnn_compiled_loss_and_optimizer():
     model = build_custom_cnn(learning_rate=0.001)
     assert isinstance(model.optimizer, tf.keras.optimizers.Adam)
     assert isinstance(model.loss, tf.keras.losses.CategoricalCrossentropy)
-    assert float(model.optimizer.learning_rate.numpy()) == pytest.approx(0.001, rel=1e-5)
+    assert float(model.optimizer.learning_rate.numpy()) == pytest.approx(
+        0.001, rel=1e-5
+    )
 
 
 def test_mobilenet_v2_output_shape():
@@ -46,7 +48,9 @@ def test_mobilenet_v2_output_shape():
 
 
 def test_efficientnet_b0_output_shape():
-    model = build_efficientnet_b0(input_shape=(224, 224, 3), num_classes=120, weights=None)
+    model = build_efficientnet_b0(
+        input_shape=(224, 224, 3), num_classes=120, weights=None
+    )
     assert model.input_shape == (None, 224, 224, 3)
     assert model.output_shape == (None, 120)
 

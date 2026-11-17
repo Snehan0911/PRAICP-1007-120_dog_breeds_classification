@@ -14,8 +14,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s - %(message)s"
 )
 logger = logging.getLogger("EfficientNetB0")
 
@@ -76,7 +75,9 @@ def build_efficientnet_b0(
                 f"Backbone frozen except top {unfreeze_top_n_layers} non-BatchNorm layers."
             )
         else:
-            logger.info("EfficientNetB0 backbone completely frozen for feature extraction.")
+            logger.info(
+                "EfficientNetB0 backbone completely frozen for feature extraction."
+            )
     else:
         base_model.trainable = True
         logger.info("EfficientNetB0 backbone fully trainable.")
