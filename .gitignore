@@ -29,6 +29,7 @@ log/tensorboard/*
 mlruns/
 *.log
 *.exe
+dog-breeds-classification/
 
 # Checkpoints & Model Binaries
 model/checkpoints/*

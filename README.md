@@ -1,6 +1,8 @@
 # Dog Breeds Classification
 
-[![Tests](https://img.shields.io/badge/tests-40%20passed%20%7C%20100%25-emerald.svg)](https://github.com/your-username/dog-breeds-classification)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)](https://praicp-1007-120-dog-breeds-classification.onrender.com/)
+
+[![Tests](https://img.shields.io/badge/tests-45%20passed%20%7C%20100%25-emerald.svg)](https://github.com/Snehan0911/PRAICP-1007-120_dog_breeds_classification)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange.svg)](https://www.tensorflow.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.1-black.svg)](https://flask.palletsprojects.com/)
@@ -9,7 +11,22 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Enterprise-grade Deep Learning system for fine-grained canine breed identification across 120 categories with transparent Grad-CAM explainability.**  
-> **Project ID:** `PRAICP-1007-120`
+> **Project ID:** `PRAICP-1007-120`  
+> 🌐 **Live Web Application:** [Dog Breeds Classification – Identify 120 Breeds – PRAICP-1007-120](https://praicp-1007-120-dog-breeds-classification.onrender.com/)  
+> 📷 **Real-Time Live Camera Detection:** [https://praicp-1007-120-dog-breeds-classification.onrender.com/live](https://praicp-1007-120-dog-breeds-classification.onrender.com/live)
+
+---
+
+## 🌐 Live Public Web Application (Production)
+
+The production web application is live and accessible 24/7 worldwide on Render:
+
+- 🚀 **Main Application Portal:** [Dog Breeds Classification – Identify 120 Breeds – PRAICP-1007-120](https://praicp-1007-120-dog-breeds-classification.onrender.com/)
+- 📷 **Live Camera & Video Detection:** [https://praicp-1007-120-dog-breeds-classification.onrender.com/live](https://praicp-1007-120-dog-breeds-classification.onrender.com/live)
+- 📊 **Evaluation & Benchmarks:** [https://praicp-1007-120-dog-breeds-classification.onrender.com/dashboard](https://praicp-1007-120-dog-breeds-classification.onrender.com/dashboard)
+- 📈 **Analytics & Confusion Matrix:** [https://praicp-1007-120-dog-breeds-classification.onrender.com/analytics](https://praicp-1007-120-dog-breeds-classification.onrender.com/analytics)
+- 🔬 **Model Specifications & Architecture:** [https://praicp-1007-120-dog-breeds-classification.onrender.com/model-info](https://praicp-1007-120-dog-breeds-classification.onrender.com/model-info)
+- 🩺 **Health Check API:** [https://praicp-1007-120-dog-breeds-classification.onrender.com/health](https://praicp-1007-120-dog-breeds-classification.onrender.com/health)
 
 ---
 
