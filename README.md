@@ -202,7 +202,7 @@ pip install -r requirements.txt
 # 4. Run automated test suite (45 tests)
 pytest -v
 
-# 5. Start the web application
+# 5. Start the Flask web application
 python app.py
 ```
 
@@ -213,7 +213,31 @@ Open your browser to:
 
 ---
 
-### Option 2: Docker & Docker Compose
+### Option 2: Streamlit Interactive Browser Application (Local & Public)
+
+Launch the full-featured Streamlit UI featuring built-in live camera capture, Top-K sliders, Grad-CAM attention heatmaps, and empirical performance metrics:
+
+```powershell
+# Run Streamlit Locally
+.\.venv\Scripts\python -m streamlit run streamlit_app.py --server.port 8501
+
+# Or double-click the one-click runner:
+.\run_streamlit.bat
+```
+* **Local Streamlit URL:** `http://localhost:8501`
+
+#### Expose as a Public Internet Application (Cloudflare Tunnel)
+To share the live Streamlit app with anyone in the world over a secure HTTPS public link:
+```powershell
+.\cloudflared.exe tunnel --url http://localhost:8501
+# Or double-click:
+.\run_public_tunnel.bat
+```
+This generates a temporary public HTTPS link (e.g., `https://<subdomain>.trycloudflare.com`) accessible from any smartphone or browser without port forwarding.
+
+---
+
+### Option 3: Docker & Docker Compose
 
 Deploy the containerized application with a single command:
 
