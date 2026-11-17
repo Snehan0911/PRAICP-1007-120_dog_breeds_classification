@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result: {{ prediction.top_prediction.display_name }} – Dog Breeds Classification{% endblock %}
+
+{% block content %}
+<div class="space-y-8 max-w-5xl mx-auto">
+
+  <!-- Top Hero Banner with Primary Prediction -->
+  <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
+    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="space-y-2">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-semibold uppercase tracking-wider">
+          <i class="fa-solid fa-award text-amber-400"></i>
+          <span>Top Predicted Breed</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white">
+          {{ prediction.top_prediction.display_name }}
+        </h1>
+        <p class="text-slate-300 text-sm flex items-center space-x-4">
+          <span><i class="fa-solid fa-gauge-simple mr-1.5 text-sky-400"></i>Latency: <strong>{{ prediction.latency_ms }} ms</strong></span>
+          <span>&bull;</span>
+          <span><i class="fa-solid fa-layer-group mr-1.5 text-indigo-400"></i>Evaluated across <strong>120 breeds</strong></span>
+        </p>
+      </div>
+
+      <!-- Confidence Pill -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-5 text-center border border-white/10 shrink-0">
+        <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400 font-mono">
+          {{ prediction.top_prediction.percentage }}%
+        </div>
+        <span class="text-xs text-slate-300 font-medium uppercase tracking-wider">Confidence Score</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid: Top 3 Probabilities & Grad-CAM Visual Explanation -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- Left Column: Confidence Rankings (5 cols) -->
+    <div class="lg:col-span-5 space-y-6">
+      
+      <!-- Top-3 Rankings Card -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-ranking-star text-amber-500"></i>
+          <span>Top 3 Predictions</span>
+        </h2>
+
+        <div class="space-y-4">
+          {% for cand in prediction.top_k_predictions %}
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center space-x-2">
+                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold {% if cand.rank == 1 %}bg-amber-500 text-white shadow-sm shadow-amber-500/40{% elif cand.rank == 2 %}bg-slate-300 text-slate-800{% else %}bg-amber-800/20 text-amber-900{% endif %}">
+                  {{ cand.rank }}
+                </span>
+                <span class="font-bold text-slate-800 text-base">{{ cand.display_name }}</span>
+              </div>
+              <span class="font-mono font-bold text-slate-700 text-sm">{{ cand.percentage }}%</span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500 {% if cand.rank == 1 %}bg-emerald-500{% elif cand.rank == 2 %}bg-sky-500{% else %}bg-indigo-400{% endif %}" style="width: {{ cand.percentage }}%;"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Inference Diagnostics Card -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider text-xs flex items-center space-x-2">
+          <i class="fa-solid fa-circle-nodes text-sky-600"></i>
+          <span>Inference Metadata</span>
+        </h3>
+        <dl class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <dt class="text-slate-500">Model Backbone</dt>
+            <dd class="font-bold text-slate-800">MobileNetV2</dd>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <dt class="text-slate-500">Input Dimensions</dt>
+            <dd class="font-bold text-slate-800">224 &times; 224 &times; 3</dd>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <dt class="text-slate-500">Execution Device</dt>
+            <dd class="font-bold text-slate-800">CPU Threadpool</dd>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <dt class="text-slate-500">Inference Time</dt>
+            <dd class="font-bold text-slate-800">{{ prediction.latency_ms }} ms</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="{{ url_for('index') }}" class="flex-1 py-3 px-4 rounded-xl font-semibold text-center text-white bg-sky-600 hover:bg-sky-500 transition-colors shadow-sm text-sm flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-camera"></i>
+          <span>Classify Another Photo</span>
+        </a>
+        <a href="{{ url_for('analytics') }}" class="py-3 px-4 rounded-xl font-semibold text-center text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition-colors shadow-sm text-sm flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Analytics</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Grad-CAM Explainable AI Visuals (7 cols) -->
+    <div class="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-eye text-indigo-600"></i>
+            <span>Grad-CAM Explainable AI</span>
+          </h2>
+          <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-200">
+            Visual Interpretation
+          </span>
+        </div>
+        <p class="text-xs text-slate-500">
+          Gradient-Weighted Class Activation Mapping highlights which image regions directed the model toward predicting <strong>{{ prediction.top_prediction.display_name }}</strong>.
+        </p>
+      </div>
+
+      <!-- Visual Comparison Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Original Photo -->
+        <div class="space-y-2">
+          <div class="aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm flex items-center justify-center">
+            <img src="{{ uploaded_image_url }}" alt="Original Dog" class="w-full h-full object-contain">
+          </div>
+          <p class="text-center text-xs font-semibold text-slate-600">
+            <i class="fa-solid fa-image mr-1 text-slate-400"></i> Input Photograph
+          </p>
+        </div>
+
+        <!-- Grad-CAM Overlay -->
+        <div class="space-y-2">
+          <div class="aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm flex items-center justify-center">
+            {% if prediction.gradcam_base64 %}
+            <img src="{{ prediction.gradcam_base64 }}" alt="Grad-CAM Overlay" class="w-full h-full object-contain">
+            {% else %}
+            <div class="text-center p-6 text-slate-400">
+              <i class="fa-solid fa-triangle-exclamation text-3xl mb-2 text-amber-500"></i>
+              <p class="text-xs">Grad-CAM visualization not available for this input.</p>
+            </div>
+            {% endif %}
+          </div>
+          <p class="text-center text-xs font-semibold text-indigo-600">
+            <i class="fa-solid fa-fire mr-1 text-amber-500"></i> Grad-CAM JET Activation Map
+          </p>
+        </div>
+      </div>
+
+      <!-- Explanation Note Box -->
+      <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-100 space-y-1.5 text-xs text-indigo-900">
+        <p class="font-bold flex items-center space-x-1.5">
+          <i class="fa-solid fa-circle-info text-indigo-600"></i>
+          <span>How to read this heatmap:</span>
+        </p>
+        <p class="text-indigo-800 leading-relaxed">
+          Warm colors (<span class="font-semibold text-rose-600">red and yellow</span>) indicate high spatial activation in the final convolutional layer (<code class="bg-indigo-100 px-1 py-0.5 rounded text-indigo-950 font-mono">out_relu</code>). Cool colors (<span class="font-semibold text-sky-600">blue and cyan</span>) represent background regions discarded by the classifier. Notice how activations concentrate on distinguishing anatomical features such as snout posture, ear stance, and coat markings.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

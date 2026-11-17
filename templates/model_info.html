@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Model Architecture – Dog Breeds Classification{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Deep Learning Model Architecture</h1>
+      <p class="text-sm text-slate-500 mt-1">Technical specifications and mathematical foundations of the transfer learning engine powering <strong>Dog Breeds Classification</strong>.</p>
+    </div>
+    <div class="inline-flex items-center space-x-2 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-full border border-sky-200 text-xs font-semibold">
+      <i class="fa-solid fa-microchip"></i>
+      <span>MobileNetV2 Backbone</span>
+    </div>
+  </div>
+
+  <!-- Key Architectural Highlights -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+      <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+        <i class="fa-solid fa-layer-group"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-900">Inverted Residual Blocks</h3>
+      <p class="text-xs text-slate-500 leading-relaxed">
+        Unlike standard residual networks (ResNet) that compress channels before expanding, MobileNetV2 expands to high dimensions in intermediate layers, applies a depthwise convolution, and projects back to low-dimensional linear bottlenecks.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+      <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+        <i class="fa-solid fa-scissors"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-900">Depthwise Separable Convolutions</h3>
+      <p class="text-xs text-slate-500 leading-relaxed">
+        Decomposes standard 2D convolution into depthwise spatial filtering per channel followed by pointwise $1 \times 1$ linear projection, slashing computation by approximately 88% while retaining expressive power.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+      <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-900">Transfer Learning Head</h3>
+      <p class="text-xs text-slate-500 leading-relaxed">
+        Leverages 1.4 million pre-trained ImageNet image priors. The backbone remains frozen during Stage 1 feature extraction, allowing our custom 154K parameter head with dropout (0.3) to specialize in canine fine-grained traits.
+      </p>
+    </div>
+  </div>
+
+  <!-- Model Architecture Layer Specification Table -->
+  <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+      <i class="fa-solid fa-table-list text-sky-600"></i>
+      <span>Layer Hierarchy &amp; Tensor Flow</span>
+    </h2>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-semibold uppercase border-y border-slate-200">
+          <tr>
+            <th class="py-3 px-4">Stage</th>
+            <th class="py-3 px-4">Layer Name</th>
+            <th class="py-3 px-4">Layer Type</th>
+            <th class="py-3 px-4">Output Dimensions</th>
+            <th class="py-3 px-4">Parameters</th>
+            <th class="py-3 px-4">Role</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-slate-700">
+          <tr>
+            <td class="py-3 px-4 font-semibold text-slate-500">0</td>
+            <td class="py-3 px-4 font-mono font-bold text-slate-800">input_image</td>
+            <td class="py-3 px-4 font-mono">InputLayer</td>
+            <td class="py-3 px-4 font-mono">(None, 224, 224, 3)</td>
+            <td class="py-3 px-4 font-mono">0</td>
+            <td class="py-3 px-4">Standardized RGB canine portrait</td>
+          </tr>
+          <tr class="bg-sky-50/50">
+            <td class="py-3 px-4 font-semibold text-sky-600">1</td>
+            <td class="py-3 px-4 font-mono font-bold text-sky-900">mobilenetv2_1.00_224</td>
+            <td class="py-3 px-4 font-mono">Functional Backbone</td>
+            <td class="py-3 px-4 font-mono">(None, 7, 7, 1280)</td>
+            <td class="py-3 px-4 font-mono">2,257,984</td>
+            <td class="py-3 px-4">Inverted residual feature extraction (Frozen)</td>
+          </tr>
+          <tr class="bg-indigo-50/40">
+            <td class="py-3 px-4 font-semibold text-indigo-600">2</td>
+            <td class="py-3 px-4 font-mono font-bold text-indigo-900">out_relu</td>
+            <td class="py-3 px-4 font-mono">ReLU Activation</td>
+            <td class="py-3 px-4 font-mono">(None, 7, 7, 1280)</td>
+            <td class="py-3 px-4 font-mono">0</td>
+            <td class="py-3 px-4 font-semibold text-indigo-700">Target Layer for Grad-CAM Explainable AI</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-semibold text-slate-500">3</td>
+            <td class="py-3 px-4 font-mono font-bold text-slate-800">global_average_pooling2d</td>
+            <td class="py-3 px-4 font-mono">GlobalAveragePooling2D</td>
+            <td class="py-3 px-4 font-mono">(None, 1280)</td>
+            <td class="py-3 px-4 font-mono">0</td>
+            <td class="py-3 px-4">Spatial dimension collapse</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-semibold text-slate-500">4</td>
+            <td class="py-3 px-4 font-mono font-bold text-slate-800">dropout</td>
+            <td class="py-3 px-4 font-mono">Dropout (rate=0.3)</td>
+            <td class="py-3 px-4 font-mono">(None, 1280)</td>
+            <td class="py-3 px-4 font-mono">0</td>
+            <td class="py-3 px-4">Regularization against co-adaptation</td>
+          </tr>
+          <tr class="bg-emerald-50/50">
+            <td class="py-3 px-4 font-semibold text-emerald-600">5</td>
+            <td class="py-3 px-4 font-mono font-bold text-emerald-900">predictions</td>
+            <td class="py-3 px-4 font-mono">Dense (Softmax)</td>
+            <td class="py-3 px-4 font-mono">(None, 120)</td>
+            <td class="py-3 px-4 font-mono">153,720</td>
+            <td class="py-3 px-4 font-semibold text-emerald-700">Class probability distribution over 120 breeds</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mathematical Formulations -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+      <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+        <i class="fa-solid fa-square-root-variable text-sky-600"></i>
+        <span>Depthwise Separable Efficiency</span>
+      </h3>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Given input feature map of size $D_F \times D_F \times M$ and kernel $D_K \times D_K$:
+      </p>
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-800">
+        Ratio = &frac12; Cost<sub>depthwise+pointwise</sub> / Cost<sub>standard</sub> = 1/N + 1/D<sub>K</sub><sup>2</sup>
+      </div>
+      <p class="text-xs text-slate-500">
+        For $3 \times 3$ kernels ($D_K = 3$) and $N \gg 9$ output channels, computation reduces by a factor of 8 to 9, allowing lightweight sub-second predictions on standard CPU threads.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+      <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+        <i class="fa-solid fa-chart-line text-indigo-600"></i>
+        <span>Optimization &amp; Objective Function</span>
+      </h3>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Trained using Categorical Cross-Entropy Loss with Adam optimizer:
+      </p>
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-800">
+        Loss = &minus; &sum;<sub>c=1</sub><sup>120</sup> y<sub>c</sub> &middot; log(p<sub>c</sub>) + &lambda; &sum; w<sup>2</sup>
+      </div>
+      <p class="text-xs text-slate-500">
+        Coupled with an adaptive learning rate scheduler (<code class="bg-slate-200 px-1 py-0.5 rounded text-slate-900">ReduceLROnPlateau</code>) monitoring validation loss to escape saddle points.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

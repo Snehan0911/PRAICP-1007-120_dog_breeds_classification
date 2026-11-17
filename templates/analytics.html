@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Evaluation Analytics – Dog Breeds Classification{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Model Evaluation &amp; EDA Analytics</h1>
+      <p class="text-sm text-slate-500 mt-1">Real experimental results, confusion matrices, and exploratory data analysis charts for <strong>Dog Breeds Classification</strong>.</p>
+    </div>
+    <div class="inline-flex items-center space-x-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200 text-xs font-semibold">
+      <i class="fa-solid fa-flask-vial"></i>
+      <span>Empirical Evaluation (Zero Mock Data)</span>
+    </div>
+  </div>
+
+  <!-- Metric KPI Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+      <p class="text-[11px] font-semibold text-slate-400 uppercase">Test Samples</p>
+      <p class="text-2xl font-black text-slate-900 mt-0.5">500</p>
+      <span class="text-[10px] text-slate-500">Holdout split</span>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+      <p class="text-[11px] font-semibold text-slate-400 uppercase">Top-1 Accuracy</p>
+      <p class="text-2xl font-black text-sky-600 mt-0.5">33.00%</p>
+      <span class="text-[10px] text-sky-600 font-medium">Exact match</span>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+      <p class="text-[11px] font-semibold text-slate-400 uppercase">Top-3 Accuracy</p>
+      <p class="text-2xl font-black text-indigo-600 mt-0.5">52.60%</p>
+      <span class="text-[10px] text-indigo-600 font-medium">In top 3</span>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+      <p class="text-[11px] font-semibold text-slate-400 uppercase">Macro Precision</p>
+      <p class="text-2xl font-black text-slate-800 mt-0.5">31.96%</p>
+      <span class="text-[10px] text-slate-500">Unweighted</span>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+      <p class="text-[11px] font-semibold text-slate-400 uppercase">Macro Recall</p>
+      <p class="text-2xl font-black text-slate-800 mt-0.5">27.67%</p>
+      <span class="text-[10px] text-slate-500">Unweighted</span>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+      <p class="text-[11px] font-semibold text-slate-400 uppercase">Macro F1</p>
+      <p class="text-2xl font-black text-amber-600 mt-0.5">26.41%</p>
+      <span class="text-[10px] text-amber-600 font-medium">Harmonic mean</span>
+    </div>
+  </div>
+
+  <!-- Section 1: Confusion Matrices -->
+  <div class="space-y-4">
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold text-sm">1</div>
+      <h2 class="text-xl font-bold text-slate-900">Confusion Matrices &amp; Misclassification Dynamics</h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Full Normalized Matrix -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center justify-between">
+          <span>120-Class Normalized Confusion Matrix</span>
+          <span class="text-xs text-slate-400 font-mono">120 &times; 120 Grid</span>
+        </h3>
+        <p class="text-xs text-slate-500">
+          Diagonal density illustrates true positive hit rates per class across all 120 Stanford Dogs breeds.
+        </p>
+        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+          <img src="{{ url_for('serve_output', filename='evaluation/confusion_matrix_normalized.png') }}" alt="120-Class Normalized Confusion Matrix" class="w-full h-auto object-contain">
+        </div>
+      </div>
+
+      <!-- Top 20 Confusion Matrix -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center justify-between">
+          <span>Top-20 High-Volume Breed Matrix</span>
+          <span class="text-xs text-slate-400 font-mono">Focus Sub-matrix</span>
+        </h3>
+        <p class="text-xs text-slate-500">
+          Detailed inspection of the 20 most frequent breeds reveals cluster confusions between subtle canine sub-families.
+        </p>
+        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+          <img src="{{ url_for('serve_output', filename='evaluation/confusion_matrix_top20.png') }}" alt="Top-20 High-Volume Breed Confusion Matrix" class="w-full h-auto object-contain">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Model Architecture Comparison & Training Curves -->
+  <div class="space-y-4">
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">2</div>
+      <h2 class="text-xl font-bold text-slate-900">Architecture Benchmark &amp; Convergence</h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Comparative Chart -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center justify-between">
+          <span>Deep CNN Architecture Comparison</span>
+          <span class="text-xs text-slate-400 font-mono">MobileNetV2 vs Custom vs EfficientNet</span>
+        </h3>
+        <p class="text-xs text-slate-500">
+          Comparing parameter efficiency, Top-1 accuracy, and Top-3 accuracy across investigated model architectures.
+        </p>
+        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+          <img src="{{ url_for('serve_output', filename='evaluation/model_comparison.png') }}" alt="Model Architecture Comparison" class="w-full h-auto object-contain">
+        </div>
+      </div>
+
+      <!-- Training Curves -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center justify-between">
+          <span>MobileNetV2 Training &amp; Validation Curves</span>
+          <span class="text-xs text-slate-400 font-mono">Loss &amp; Accuracy Epochs</span>
+        </h3>
+        <p class="text-xs text-slate-500">
+          Categorical cross-entropy and accuracy curves over training iterations, demonstrating steady gradient convergence.
+        </p>
+        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+          <img src="{{ url_for('serve_output', filename='training/mobilenet_v2_training_curves.png') }}" alt="MobileNetV2 Training Curves" class="w-full h-auto object-contain">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Exploratory Data Analysis (EDA) Findings -->
+  <div class="space-y-4">
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">3</div>
+      <h2 class="text-xl font-bold text-slate-900">Dataset Morphology &amp; Pixel Distributions</h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Class Distribution -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-2">
+        <h4 class="font-bold text-slate-800 text-xs uppercase">Class Distribution</h4>
+        <div class="rounded-lg overflow-hidden border border-slate-200">
+          <img src="{{ url_for('serve_output', filename='eda/class_distribution.png') }}" alt="Class Distribution" class="w-full h-auto object-contain">
+        </div>
+        <p class="text-[11px] text-slate-500">Shows uniform distribution (~150 to 252 images per breed, median 166 images).</p>
+      </div>
+
+      <!-- Top and Bottom Classes -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-2">
+        <h4 class="font-bold text-slate-800 text-xs uppercase">Top &amp; Bottom Breeds</h4>
+        <div class="rounded-lg overflow-hidden border border-slate-200">
+          <img src="{{ url_for('serve_output', filename='eda/top_bottom_breeds.png') }}" alt="Top and Bottom Breeds" class="w-full h-auto object-contain">
+        </div>
+        <p class="text-[11px] text-slate-500">Maltese Dog (252) has the highest count; Redbone &amp; Eskimo Dog (148-150) the lowest.</p>
+      </div>
+
+      <!-- Pixel Intensities -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-2">
+        <h4 class="font-bold text-slate-800 text-xs uppercase">RGB Channel Statistics</h4>
+        <div class="rounded-lg overflow-hidden border border-slate-200">
+          <img src="{{ url_for('serve_output', filename='eda/pixel_intensity_distribution.png') }}" alt="Pixel Intensity Distribution" class="w-full h-auto object-contain">
+        </div>
+        <p class="text-[11px] text-slate-500">Slight green-blue outdoors skew from grass/sky backgrounds in real photos.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

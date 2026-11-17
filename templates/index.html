@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Dog Breeds Classification – Identify 120 Breeds{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+  <!-- Hero Header -->
+  <div class="text-center max-w-3xl mx-auto space-y-4">
+    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold uppercase tracking-wider">
+      <i class="fa-solid fa-sparkles text-sky-600"></i>
+      <span>Deep Learning &amp; Computer Vision</span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+      Identify Any Canine Breed in Milliseconds
+    </h1>
+    <p class="text-slate-600 text-base sm:text-lg">
+      Upload a dog photograph to identify its breed from <strong>120 distinct classes</strong> using our transfer learning deep convolutional neural network with transparent Grad-CAM explainability.
+    </p>
+  </div>
+
+  <!-- Upload and Sample Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- Upload Zone (7 cols) -->
+    <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center space-x-2">
+        <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i>
+        <span>Upload Dog Photograph</span>
+      </h2>
+      <p class="text-sm text-slate-500 mb-6">
+        Supports JPG, JPEG, PNG, or WEBP (Max: 16 MB).
+      </p>
+
+      <form action="{{ url_for('predict') }}" method="POST" enctype="multipart/form-data" id="uploadForm" class="space-y-6">
+        <!-- Drag & Drop Box -->
+        <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-2xl p-8 text-center cursor-pointer transition-all bg-slate-50 hover:bg-sky-50/50 group">
+          <input type="file" name="image" id="fileInput" accept="image/*" class="hidden">
+          
+          <div id="uploadPlaceholder" class="space-y-3">
+            <div class="w-16 h-16 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-image text-2xl"></i>
+            </div>
+            <div>
+              <p class="text-base font-semibold text-slate-700">Click to choose a file or drag &amp; drop</p>
+              <p class="text-xs text-slate-400 mt-1">High resolution clear canine portraits provide highest accuracy</p>
+            </div>
+          </div>
+
+          <!-- Live Image Preview -->
+          <div id="previewContainer" class="hidden space-y-3">
+            <img id="imagePreview" src="#" alt="Preview" class="max-h-64 mx-auto rounded-xl shadow-md border border-slate-200 object-contain">
+            <p id="fileName" class="text-xs font-mono text-slate-500"></p>
+            <button type="button" id="clearBtn" class="text-xs font-semibold text-rose-600 hover:text-rose-700 underline">
+              Choose a different image
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn" class="w-full py-3.5 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 shadow-md shadow-sky-500/20 transition-all flex items-center justify-center space-x-2 text-base disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Classify Dog Breed</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Quick Test Samples (5 cols) -->
+    <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center space-x-2">
+        <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i>
+        <span>Try Instant Samples</span>
+      </h2>
+      <p class="text-sm text-slate-500 mb-4">
+        Click any verified sample to run inference instantly:
+      </p>
+
+      <div class="grid grid-cols-2 gap-3">
+        {% for sample in samples %}
+        <form action="{{ url_for('predict') }}" method="POST" class="w-full">
+          <input type="hidden" name="sample_name" value="{{ sample.filename }}">
+          <button type="submit" class="w-full group text-left p-2.5 rounded-xl border border-slate-200 hover:border-sky-500 hover:bg-sky-50/50 transition-all">
+            <div class="aspect-square w-full rounded-lg overflow-hidden bg-slate-100 mb-2 relative">
+              <img src="{{ url_for('serve_sample', filename=sample.filename) }}" alt="{{ sample.label }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+              <span class="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur">Sample</span>
+            </div>
+            <p class="text-xs font-bold text-slate-800 truncate">{{ sample.label }}</p>
+            <p class="text-[11px] text-sky-600 font-medium flex items-center mt-0.5">
+              <span>Predict now</span>
+              <i class="fa-solid fa-arrow-right ml-1 text-[9px] group-hover:translate-x-1 transition-transform"></i>
+            </p>
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Highlights Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-start space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+        <i class="fa-solid fa-network-wired text-xl"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">120 Fine-Grained Classes</h3>
+        <p class="text-xs text-slate-500 mt-1">Trained and validated on all 120 Stanford Dogs breed categories with stratified class distribution.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-start space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
+        <i class="fa-solid fa-eye text-xl"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Grad-CAM Explainable AI</h3>
+        <p class="text-xs text-slate-500 mt-1">Inspect spatial gradient heatmaps highlighting facial markings, snout contours, and ear shapes.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-start space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+        <i class="fa-solid fa-gauge-high text-xl"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Low-Latency Inference</h3>
+        <p class="text-xs text-slate-500 mt-1">Lightweight inverted residual architecture executes sub-second predictions with minimal memory footprint.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+  const previewContainer = document.getElementById('previewContainer');
+  const imagePreview = document.getElementById('imagePreview');
+  const fileName = document.getElementById('fileName');
+  const clearBtn = document.getElementById('clearBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const uploadForm = document.getElementById('uploadForm');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-sky-500', 'bg-sky-50');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-sky-500', 'bg-sky-50');
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-sky-500', 'bg-sky-50');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      fileInput.files = e.dataTransfer.files;
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFile(e.target.files[0]);
+    }
+  });
+
+  function handleFile(file) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file (JPG, PNG, WEBP).');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.src = e.target.result;
+      fileName.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      uploadPlaceholder.classList.add('hidden');
+      previewContainer.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  clearBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.value = '';
+    imagePreview.src = '#';
+    previewContainer.classList.add('hidden');
+    uploadPlaceholder.classList.remove('hidden');
+  });
+
+  uploadForm.addEventListener('submit', () => {
+    if (!fileInput.files || fileInput.files.length === 0) {
+      alert('Please select an image first.');
+      event.preventDefault();
+      return;
+    }
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Image...</span>';
+  });
+</script>
+{% endblock %}

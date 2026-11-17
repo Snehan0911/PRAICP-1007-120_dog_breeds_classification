@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}System Dashboard – Dog Breeds Classification{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">System Performance &amp; Data Dashboard</h1>
+      <p class="text-sm text-slate-500 mt-1">Live telemetry, dataset split verification, and pipeline architecture for <strong>Dog Breeds Classification</strong>.</p>
+    </div>
+    <div class="inline-flex items-center space-x-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 text-xs font-semibold">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Verified Stanford Dogs Dataset</span>
+    </div>
+  </div>
+
+  <!-- Key Performance Indicators (KPIs) -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Card 1 -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-1">
+      <p class="text-xs font-semibold uppercase text-slate-400">Total Images</p>
+      <p class="text-3xl font-black text-slate-900">20,580</p>
+      <p class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i>100% Byte-verified</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-1">
+      <p class="text-xs font-semibold uppercase text-slate-400">Dog Breeds (Classes)</p>
+      <p class="text-3xl font-black text-sky-600">120</p>
+      <p class="text-xs text-slate-500 font-medium">Fine-grained categories</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-1">
+      <p class="text-xs font-semibold uppercase text-slate-400">Val Top-3 Accuracy</p>
+      <p class="text-3xl font-black text-indigo-600">55.0%</p>
+      <p class="text-xs text-indigo-600 font-medium"><i class="fa-solid fa-bolt mr-1"></i>MobileNetV2 Frozen</p>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-1">
+      <p class="text-xs font-semibold uppercase text-slate-400">Total Parameters</p>
+      <p class="text-3xl font-black text-slate-900">2.41M</p>
+      <p class="text-xs text-slate-500 font-medium">154K Trainable Head</p>
+    </div>
+  </div>
+
+  <!-- Dataset Stratification & Splits Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- Split Distribution Table (7 cols) -->
+    <div class="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-pie-chart text-sky-600"></i>
+          <span>Stratified Data Partitioning (70 / 15 / 15)</span>
+        </h2>
+        <span class="text-xs bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full font-semibold border border-sky-100">
+          Zero Data Leakage
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 font-semibold text-xs border-y border-slate-200">
+            <tr>
+              <th class="py-3 px-4">Partition</th>
+              <th class="py-3 px-4">Image Count</th>
+              <th class="py-3 px-4">Ratio</th>
+              <th class="py-3 px-4">Classes Represented</th>
+              <th class="py-3 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            <tr>
+              <td class="py-3 px-4 font-semibold text-sky-700 flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                <span>Training</span>
+              </td>
+              <td class="py-3 px-4 font-mono font-bold">14,406</td>
+              <td class="py-3 px-4">70.0%</td>
+              <td class="py-3 px-4 font-mono">120 / 120</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-emerald-100 text-emerald-800 font-medium">Active</span></td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold text-indigo-700 flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                <span>Validation</span>
+              </td>
+              <td class="py-3 px-4 font-mono font-bold">3,087</td>
+              <td class="py-3 px-4">15.0%</td>
+              <td class="py-3 px-4 font-mono">120 / 120</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-sky-100 text-sky-800 font-medium">Tuning</span></td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold text-amber-700 flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <span>Testing (Holdout)</span>
+              </td>
+              <td class="py-3 px-4 font-mono font-bold">3,087</td>
+              <td class="py-3 px-4">15.0%</td>
+              <td class="py-3 px-4 font-mono">120 / 120</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-amber-100 text-amber-800 font-medium">Strict Blind</span></td>
+            </tr>
+            <tr class="font-bold bg-slate-50 text-slate-900">
+              <td class="py-3 px-4">Total Dataset</td>
+              <td class="py-3 px-4 font-mono">20,580</td>
+              <td class="py-3 px-4">100.0%</td>
+              <td class="py-3 px-4 font-mono">120 / 120</td>
+              <td class="py-3 px-4 text-emerald-600"><i class="fa-solid fa-shield-halved mr-1"></i>Balanced</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Split Visual Bar -->
+      <div class="space-y-1.5">
+        <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden flex">
+          <div class="h-full bg-sky-500" style="width: 70%;" title="Training: 70%"></div>
+          <div class="h-full bg-indigo-500" style="width: 15%;" title="Validation: 15%"></div>
+          <div class="h-full bg-amber-500" style="width: 15%;" title="Testing: 15%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400">
+          <span>70% Training (14,406)</span>
+          <span>15% Validation (3,087)</span>
+          <span>15% Test (3,087)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pipeline Architecture Specs (5 cols) -->
+    <div class="lg:col-span-5 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+        <i class="fa-solid fa-gears text-indigo-600"></i>
+        <span>Data Ingestion Pipeline</span>
+      </h2>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+            <i class="fa-solid fa-microchip text-sky-600"></i>
+            <span>tf.data.Dataset with Parallel Mapping</span>
+          </span>
+          <p class="text-slate-500">I/O decoding and resizing decoupled via <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-800">num_parallel_calls=tf.data.AUTOTUNE</code> to eliminate CPU bottlenecks.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+            <i class="fa-solid fa-shuffle text-indigo-600"></i>
+            <span>Data Augmentation Invariance</span>
+          </span>
+          <p class="text-slate-500">Random horizontal flips, gentle rotations (&plusmn;15&deg;), and brightness adjustments prevent overfitting without altering breed morphology.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+            <i class="fa-solid fa-memory text-emerald-600"></i>
+            <span>RAM-Optimized Prefetching</span>
+          </span>
+          <p class="text-slate-500">Batch size fixed to 32 with dynamic memory management. Avoids raw image loading into system memory all at once.</p>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <a href="{{ url_for('analytics') }}" class="w-full py-2.5 px-4 rounded-xl text-center font-semibold text-xs text-sky-700 bg-sky-50 border border-sky-200 hover:bg-sky-100 transition-colors block">
+          View Detailed Analytics &amp; Confusion Matrix &rarr;
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

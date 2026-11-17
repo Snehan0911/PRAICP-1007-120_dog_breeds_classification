@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}About Project – Dog Breeds Classification{% endblock %}
+
+{% block content %}
+<div class="space-y-10 max-w-4xl mx-auto">
+
+  <!-- Page Header -->
+  <div class="text-center space-y-3 pb-6 border-b border-slate-200">
+    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold uppercase tracking-wider">
+      <span>Project ID: PRAICP-1007-120</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Dog Breeds Classification</h1>
+    <p class="text-slate-600 text-base max-w-2xl mx-auto">
+      An enterprise-grade deep learning computer vision system designed to classify 120 canine breeds from photographic images with transparent visual explainability.
+    </p>
+  </div>
+
+  <!-- Project Identity & Purpose -->
+  <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+    <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+      <i class="fa-solid fa-compass text-sky-600"></i>
+      <span>Project Purpose &amp; Vision</span>
+    </h2>
+    <p class="text-sm text-slate-600 leading-relaxed">
+      Identifying dog breeds is an archetypal <strong>fine-grained visual categorization</strong> challenge. Unlike generic object recognition (e.g., distinguishing a dog from a bicycle), fine-grained breed classification requires resolving minimal inter-class visual discrepancies (e.g., distinguishing an Alaskan Malamute from a Siberian Husky) while accommodating substantial intra-class variation (different coat colors, puppy vs. adult poses, and diverse environmental lighting).
+    </p>
+    <p class="text-sm text-slate-600 leading-relaxed">
+      This project implements a complete, end-to-end AI/ML pipeline following strict software engineering and machine learning rigor: from raw image validation and reproducible data splitting, to transfer learning model training, comprehensive evaluation, explainable AI, and responsive web deployment.
+    </p>
+  </div>
+
+  <!-- The Stanford Dogs Dataset -->
+  <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+    <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+      <i class="fa-solid fa-database text-indigo-600"></i>
+      <span>The Dataset: Stanford Dogs</span>
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 py-2">
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
+        <span class="block text-2xl font-black text-slate-900">20,580</span>
+        <span class="text-xs text-slate-500 font-medium">Verified Color Photographs</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
+        <span class="block text-2xl font-black text-sky-600">120</span>
+        <span class="text-xs text-slate-500 font-medium">Canine Breeds Represented</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
+        <span class="block text-2xl font-black text-indigo-600">0</span>
+        <span class="text-xs text-slate-500 font-medium">Corrupted or Unreadable Files</span>
+      </div>
+    </div>
+    <p class="text-sm text-slate-600 leading-relaxed">
+      Derived from Stanford University's landmark fine-grained vision benchmark (Khosla et al.), the dataset contains images collected across the globe representing breeds from the American Kennel Club (AKC) and Fédération Cynologique Internationale (FCI). Every individual file was verified during Milestone 3 to ensure byte-level integrity.
+    </p>
+  </div>
+
+  <!-- Engineering Standards -->
+  <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+    <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+      <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+      <span>Professional Engineering Standards</span>
+    </h2>
+    <div class="space-y-3 text-sm text-slate-600">
+      <div class="flex items-start space-x-3">
+        <i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>
+        <div>
+          <strong class="text-slate-800">Zero Data Leakage:</strong> Training, validation, and holdout test partitions (70 / 15 / 15) were generated via stratified random splitting before any model development. Test images were never seen during training or hyperparameter tuning.
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>
+        <div>
+          <strong class="text-slate-800">Empirical Integrity:</strong> Every reported accuracy figure, confusion matrix, loss curve, and inference latency reflects real execution results without simulated or mocked numbers.
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>
+        <div>
+          <strong class="text-slate-800">Model Interpretability:</strong> Integrated Grad-CAM explainability demystifies deep neural network predictions by calculating gradient activations at convolutional feature maps.
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>
+        <div>
+          <strong class="text-slate-800">Automated Testing:</strong> 30 standalone pytest unit tests cover data loading, preprocessing, model architecture compilation, evaluation metrics, image validation, and prediction ranking.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technology Stack -->
+  <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+    <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+      <i class="fa-solid fa-code text-amber-500"></i>
+      <span>Technology Stack</span>
+    </h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+      <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+        <span class="text-slate-400 block uppercase font-semibold">Core Framework</span>
+        <span class="font-bold text-slate-800 text-sm">TensorFlow 2.21 / Keras 3</span>
+      </div>
+      <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+        <span class="text-slate-400 block uppercase font-semibold">Language</span>
+        <span class="font-bold text-slate-800 text-sm">Python 3.13</span>
+      </div>
+      <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+        <span class="text-slate-400 block uppercase font-semibold">Web Server</span>
+        <span class="font-bold text-slate-800 text-sm">Flask 3.1</span>
+      </div>
+      <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+        <span class="text-slate-400 block uppercase font-semibold">Frontend</span>
+        <span class="font-bold text-slate-800 text-sm">Tailwind CSS &amp; HTML5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limitations & Considerations -->
+  <div class="bg-amber-50/70 rounded-2xl p-6 border border-amber-200 text-xs text-amber-900 space-y-2">
+    <h3 class="font-bold text-sm flex items-center space-x-2 text-amber-950">
+      <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+      <span>Operational Considerations &amp; Model Boundaries</span>
+    </h3>
+    <ul class="list-disc list-inside space-y-1 text-amber-900/90 leading-relaxed">
+      <li><strong>Purebred Bias:</strong> The model is optimized for purebred dogs representing the 120 classes in the Stanford dataset. Mixed-breed dogs (mutts) will be matched to their most morphologically similar ancestral breeds.</li>
+      <li><strong>Non-Canine Images:</strong> The current classifier is a closed-set 120-class model. Uploading non-dog images will yield low-confidence predictions among the 120 breeds. An out-of-distribution (OOD) detector is recommended for future production iterations.</li>
+      <li><strong>Extreme Occlusion:</strong> Heavy obstruction, extreme low-light, or extreme motion blur can degrade predictive accuracy.</li>
+    </ul>
+  </div>
+
+</div>
+{% endblock %}
